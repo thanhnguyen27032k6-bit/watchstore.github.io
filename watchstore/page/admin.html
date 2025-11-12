@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | WatchStore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+
+<body>
+
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="logo-title">
+                <i class="fas fa-tools"></i> WatchStore ADMIN
+            </div>
+            <h2>Đăng Nhập Quản Trị</h2>
+
+            <form class="login-form" id="adminLoginForm">
+                <div class="input-group">
+                    <label for="username">Tên đăng nhập</label>
+                    <input type="text" id="username" name="username" required placeholder="admin" value="admin">
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password" required placeholder="123" value="123">
+                </div>
+
+                <p class="error-message" id="loginErrorMessage">Tên đăng nhập hoặc mật khẩu không đúng!</p>
+
+                <button type="submit"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="admin-wrapper" id="adminDashboard">
+        <div class="sidebar">
+            <h2><i class="fas fa-tools"></i> WatchStore</h2>
+            <ul>
+                <li><a href="#dashboard" class="active" id="link-dashboard"><i class="fas fa-tachometer-alt"></i>
+                        Dashboard</a></li>
+                <li><a href="#products"><i class="fas fa-boxes"></i> Quản lý Sản phẩm</a></li>
+                <li><a href="#categories"><i class="fas fa-tags"></i> Quản lý Danh mục</a></li>
+                <li><a href="#orders"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
+                <li><a href="#users"><i class="fas fa-users"></i> Quản lý Người dùng</a></li>
+                <li><a href="#posts"><i class="fas fa-newspaper"></i> Quản lý Tin tức</a></li>
+                <li><a href="#settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+                <li><a href="#" onclick="logoutAdmin(event)"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="admin-header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="user-info">
+                    Chào mừng, **<span id="loggedInUser">Admin</span>**! | <a href="#profile"><i
+                            class="fas fa-user-circle"></i> Tài khoản của tôi</a>
+                </div>
+            </div>
+
+            <section id="dashboard" class="dashboard-section">
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <i class="fas fa-box"></i>
+                        <h3>150</h3>
+                        <p>Tổng Sản phẩm</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-shopping-basket"></i>
+                        <h3>45</h3>
+                        <p>Đơn hàng mới</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-users"></i>
+                        <h3>1,200</h3>
+                        <p>Tổng Khách hàng</p>
+                    </div>
+                    <div class="summary-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3>150M</h3>
+                        <p>Doanh thu (Tháng)</p>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <h2>Đơn hàng mới nhất</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã ĐH</th>
+                                <th>Khách hàng</th>
+                                <th>Ngày đặt</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#DH0001</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>28/10/2025</td>
+                                <td>1.500.000₫</td>
+                                <td><span class="status-pending">Đang chờ xử lý</span></td>
+                                <td class="action-links">
+                                    <a href="#">Xem</a>
+                                    <a href="#">Duyệt</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#DH0002</td>
+                                <td>Trần Thị B</td>
+                                <td>27/10/2025</td>
+                                <td>5.700.000₫</td>
+                                <td><span class="status-delivered">Đã giao hàng</span></td>
+                                <td class="action-links">
+                                    <a href="#">Xem</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="products" class="data-section" style="display: none;">
+                <div class="data-table">
+                    <h2>Quản lý Sản phẩm</h2>
+                    <table id="productTable">
+                        <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Danh mục</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTablebody"></tbody>
+                    </table>
+                    <div class="actions"><button><i class="fas fa-plus"></i> Thêm Sản phẩm mới</button></div>
+                    <form id="productForm" style="display:none; margin-top: 20px;">
+                        <h3> thêm tên sản phẩm</h3>
+                        <label>tên sản phẩm</label>
+                        <input type="text" id="productName" required>
+
+                        <label>Giá sản phẩm</label>
+                        <input type="number" id="productValue" required>
+
+                        <label>Danh mục sản phẩm</label>
+                        <input type="text" id="productCate" required>
+
+                        <label>Ảnh sản phẩm</label>
+                        <input type="file" id="productImage" accept="image/*">
+                        <img id="previewImage" src="" alt="xem trước ảnh" style="max-width:120px; display:none; margin-top:10px; border-radius:8px;">
+
+                        <button type="submit">Lưu sản phẩm</button>
+                    </form>
+                   
+                </div>
+            </section>
+            <section id="categories" class="data-section" style="display: none;">
+                <div class="data-table">
+                    <h2>Quản lý Danh mục</h2>
+                    <p>Chức năng thêm/sửa/xóa danh mục...</p>
+                </div>
+            </section>
+            <section id="orders" class="data-section" style="display: none;">
+                <div class="data-table">
+                    <h2>Quản lý Đơn hàng</h2>
+                    <p>Danh sách chi tiết và cập nhật trạng thái đơn hàng...</p>
+                </div>
+            </section>
+            <section id="users" class="data-section" style="display: none;">
+                <div class="data-table">
+                    <h2>Quản lý Người dùng</h2>
+                    <p>Quản lý tài khoản Admin và Khách hàng...</p>
+                </div>
+            </section>
+            <section id="posts" class="data-section" style="display: none;">
+                <div class="data-table">
+                    <h2>Quản lý Tin tức</h2>
+                    <p>Chức năng thêm/sửa/xóa bài viết...</p>
+                </div>
+            </section>
+            <section id="settings" class="data-section" style="display: none;">
+                <div class="data-table">
+                    <h2>Cài đặt Hệ thống</h2>
+                    <p>Chỉnh sửa các thiết lập chung...</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // =======================================================
+        // PHẦN JAVASCRIPT (auth.js đã gộp vào)
+        // =======================================================
+
+        const LOGIN_USERNAME = "admin";
+        const LOGIN_PASSWORD = "123"; // Mật khẩu mẫu
+
+        const loginForm = document.getElementById('adminLoginForm');
+        const loginScreen = document.getElementById('loginScreen');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const loginErrorMessage = document.getElementById('loginErrorMessage');
+        const loggedInUserSpan = document.getElementById('loggedInUser');
+
+
+        const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
+        const mainContentSections = document.querySelectorAll('.main-content .data-section, .main-content .dashboard-section');
+        const pageTitle = document.getElementById('page-title');
+
+        // Hàm kiểm tra trạng thái đăng nhập khi tải trang
+        function checkLoginStatus() {
+            // Sử dụng localStorage để giữ trạng thái sau khi refresh
+            const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
+            if (isLoggedIn === 'true') {
+                showDashboard(localStorage.getItem('adminUsername') || LOGIN_USERNAME);
+            } else {
+                showLogin();
+            }
+        }
+
+        // Hàm xử lý đăng nhập
+        if (loginForm) {
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Kiểm tra mật khẩu (Mô phỏng Backend)
+                if (username === LOGIN_USERNAME && password === LOGIN_PASSWORD) {
+                    // Đăng nhập thành công
+                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    localStorage.setItem('adminUsername', username);
+                    showDashboard(username);
+                } else {
+                    // Đăng nhập thất bại
+                    loginErrorMessage.style.display = 'block';
+                }
+            });
+        }
+
+        // Hàm hiển thị Dashboard
+        function showDashboard(username) {
+            loginScreen.style.display = 'none';
+            adminDashboard.style.display = 'flex'; // Hiển thị dashboard
+            loggedInUserSpan.textContent = username;
+            loginErrorMessage.style.display = 'none';
+
+            // Chuyển đến Dashboard mặc định
+            // Đảm bảo phần tử 'link-dashboard' tồn tại trước khi click
+            const dashboardLink = document.getElementById('link-dashboard');
+            if (dashboardLink) {
+                dashboardLink.click();
+            }
+        }
+
+        // Hàm hiển thị trang Login
+        function showLogin() {
+            loginScreen.style.display = 'flex';
+            adminDashboard.style.display = 'none';
+        }
+
+        // Hàm xử lý Đăng xuất
+        function logoutAdmin(event) {
+            event.preventDefault();
+            localStorage.setItem('isAdminLoggedIn', 'false');
+            localStorage.removeItem('adminUsername');
+            showLogin();
+        }
+
+        // Hàm chuyển đổi tab trong Dashboard
+        const hideAllSections = () => {
+            mainContentSections.forEach(section => {
+                section.style.display = 'none';
+            });
+        };
+
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (link.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    const targetId = link.getAttribute('href').substring(1);
+                    hideAllSections();
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.style.display = 'block';
+                        pageTitle.textContent = link.textContent.trim();
+                    }
+                }
+            });
+        });
+
+        // Khởi động: Kiểm tra trạng thái đăng nhập khi tải trang
+        checkLoginStatus();
+        
+
+        //bắt đầu đoạn code thêm/sửa/xóa
+        const productForm = document.getElementById("productForm");
+        const productTablebody = document.getElementById("productTablebody");
+        const addProductBtn = document.querySelector(".actions button");
+        const previewImage=document.getElementById("previewImage");
+        const productImage=document.getElementById("productImage");
+
+        //lưu danh sách sản phẩm
+        let products = JSON.parse(localStorage.getItem("products")) || [];
+        let editIndex=-1;
+
+        //Hiển thị hình ảnh xem trước khi chọn file
+        productImage.addEventListener("change", function()
+        {
+            const file=this.files[0];
+            if(file)
+            {
+                const reader=new FileReader();
+                reader.onload=function(e)
+                {
+                    previewImage.src=e.target.result;
+                    previewImage.style.display="block";
+                };
+                reader.readAsDataURL(file);
+            }
+        })
+
+        //hàm hiển thị sản phẩm trong bảng
+        function productRender() 
+        {
+            productTablebody.innerHTML = "";
+            products.forEach((p, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML =
+                `
+                <td>
+                    ${p.image
+                    ?`<img src="${p.image}" alt="Ảnh sản phẩm" style="width:60px; height:60px; object-fit:cover; border-radius:8px">`
+                    :`<span style="color:#888;">(Chưa có ảnh)</span>`  }
+                </td>
+                <td>${p.name}</td>
+                <td>${p.price.toLocaleString()}₫</td>
+                <td>${p.category}</td>
+                <td>
+                    <button class="edit-btn" data-index="${index}"><i class ="fas fa-pencil"></i></button>
+                    <button class="delete-btn" data-index="${index}"><i class="fas fa-trash"></i></button>
+                </td>
+                `;
+                productTablebody.appendChild(row);
+            });
+             //xóa sản phẩm
+            document.querySelectorAll(".delete-btn").forEach(btn => 
+            {
+                btn.addEventListener("click", function() 
+                {
+                    const i = this.getAttribute("data-index");
+                    if(confirm("bạn xác nhận muốn xóa sản phẩm này?"))
+                    {
+                        products.splice(i, 1);
+                        localStorage.setItem("products", JSON.stringify(products));
+                        productRender();
+                    }
+                });
+            });
+            //Sửa sản phẩm
+            document.querySelectorAll(".edit-btn"). forEach(btn=>
+            {
+                btn.addEventListener("click", function()
+                {
+                    editIndex=this.getAttribute("data-index");
+                    const product=products[editIndex];
+
+                    document.getElementById("productName").value=product.name;
+                    price=document.getElementById("productValue").value=product.price;
+                    category=document.getElementById("productCate").value=product.category;
+
+                    if(product.image)
+                    {
+                        previewImage.src=product.image;
+                        previewImage.style.display="block";
+                    }
+                    else
+                    {
+                        previewImage.style.display="none";
+                    }
+
+                    productForm.style.display="block";
+                });
+            });
+            
+        }
+         // Khi bấm "Thêm Sản phẩm mới"
+         addProductBtn.addEventListener("click", () => 
+        {
+        productForm.style.display = productForm.style.display === "none" ? "block" : "none";
+        });
+        productForm.addEventListener("submit", (e)=>
+        {
+            e.preventDefault();
+            const name=document.getElementById("productName").value;
+            const price=Number(document.getElementById("productValue").value);
+            const category=document.getElementById("productCate").value;
+            const file=productImage.files[0];
+            const defaultImage="https://shopbanhsinhnhat.com/public/uploads/product/IwiO_dang-cap-nhat-san-pham-384.png"
+            
+            let imageData=null;
+
+            if(file)
+            {
+                const reader=new FileReader();
+                reader.onload=function(e)
+                {
+                    imageData=e.target.result;
+                    saveProduct(name, price, category, imageData);
+                };
+                reader.readAsDataURL(file);
+            }
+            else 
+            {
+                if (editIndex !== -1 && products[editIndex].image) 
+                {
+                    imageData = products[editIndex].image; 
+                } 
+                else 
+                {
+                    imageData = defaultImage; 
+                }
+                saveProduct(name, price, category, imageData);
+            }
+        });
+        function saveProduct(name, price, category, image)
+        {   
+            if (editIndex===-1) {products.push({name, price, category, image});}
+            else 
+            {
+                products[editIndex]={name, price, category, image};
+                editIndex=-1;
+            }
+            localStorage.setItem("products", JSON.stringify(products));
+            productRender();
+            productForm.reset();
+            productForm.style.display="none"; 
+            previewImage.style.display="none"; 
+            productImage.value="";
+        }
+        productRender();
+     
+       
+
+
+
+        // =======================================================
+    // PHẦN JAVASCRIPT (Tiếp theo)
+    // =======================================================
+
+    // --- Dữ liệu mô phỏng Người dùng/Khách hàng ---
+    let users = JSON.parse(localStorage.getItem("users")) || [
+        { id: 101, username: "nguyenvana", email: "vana@gmail.com", status: "active", lastLogin: "29/10/2025" },
+        { id: 102, username: "tranthib", email: "thib@gmail.com", status: "inactive", lastLogin: "25/10/2025" },
+        { id: 103, username: "lehuongc", email: "huongc@gmail.com", status: "active", lastLogin: "30/10/2025" }
+    ];
+
+    const usersSection = document.getElementById('users');
+
+    // Thêm cấu trúc HTML cho phần Users (để hiển thị danh sách)
+    // Ta sẽ chèn bảng vào bên trong div.data-table của section#users
+    if (usersSection) {
+        usersSection.querySelector('.data-table').innerHTML = `
+            <h2>Quản lý Người dùng</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Email</th>
+                        <th>Trạng thái</th>
+                        <th>Lần cuối ĐN</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                </tbody>
+            </table>
+        `;
+    }
+
+    const userTableBody = document.getElementById('userTableBody');
+
+    // Hàm lưu dữ liệu users vào localStorage
+    function saveUsers() {
+        localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    // Hàm hiển thị danh sách người dùng
+    function renderUsers() {
+        if (!userTableBody) return;
+
+        userTableBody.innerHTML = "";
+        users.forEach((user, index) => {
+            const row = document.createElement("tr");
+            const statusClass = user.status === 'active' ? 'status-delivered' : 'status-pending';
+            const statusText = user.status === 'active' ? 'Hoạt động' : 'Đã khóa';
+            const toggleActionText = user.status === 'active' ? 'Khóa' : 'Mở khóa';
+
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td><span class="${statusClass}">${statusText}</span></td>
+                <td>${user.lastLogin}</td>
+                <td class="action-links">
+                    <a href="#" class="reset-password-btn" data-index="${index}">Reset MK</a>
+                    <a href="#" class="toggle-status-btn" data-index="${index}">${toggleActionText}</a>
+                </td>
+            `;
+            userTableBody.appendChild(row);
+        });
+        
+        // Gắn sự kiện cho các nút
+        attachUserEventListeners();
+    }
+
+    // Hàm gán sự kiện thao tác
+    function attachUserEventListeners() {
+        // Reset Mật khẩu
+        document.querySelectorAll(".reset-password-btn").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                const index = this.getAttribute("data-index");
+                const user = users[index];
+                if (confirm(`Xác nhận Reset mật khẩu cho người dùng "${user.username}"?`)) {
+                    // Logic Reset: Ở đây chỉ mô phỏng thông báo
+                    alert(`Mật khẩu của "${user.username}" đã được Reset thành mật khẩu mặc định (ví dụ: 123456).`);
+                }
+            });
+        });
+
+        // Khóa / Mở khóa tài khoản
+        document.querySelectorAll(".toggle-status-btn").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                const index = this.getAttribute("data-index");
+                const user = users[index];
+                const newStatus = user.status === 'active' ? 'inactive' : 'active';
+                const action = newStatus === 'active' ? 'Mở khóa' : 'Khóa';
+
+                if (confirm(`Xác nhận ${action} tài khoản "${user.username}"?`)) {
+                    users[index].status = newStatus;
+                    saveUsers();
+                    renderUsers(); // Render lại bảng
+                    alert(`Tài khoản "${user.username}" đã được ${action.toLowerCase()} thành công.`);
+                }
+            });
+        });
+    }
+    
+    // Thêm sự kiện click cho sidebar link Quản lý Người dùng để render bảng
+    document.getElementById('users').addEventListener('click', renderUsers);
+    
+    // Gán sự kiện cho tất cả sidebar links để đảm bảo renderUsers chạy khi tab được chọn
+    sidebarLinks.forEach(link => {
+        if (link.getAttribute('href') === '#users') {
+            link.addEventListener('click', renderUsers);
+        }
+    });
+
+
+    // Gọi hàm renderUsers lần đầu nếu tab users đang được chọn mặc định
+    // (Trong trường hợp này không cần vì dashboard là mặc định, nhưng nên thêm cho đầy đủ)
+    if (window.location.hash === '#users') {
+        renderUsers();
+    }
+    </script>
+</body>
+
+</html>

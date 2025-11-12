@@ -1,0 +1,943 @@
+<!-- ← Giỏ hàng + Thanh toán + Xem đơn hàng -->
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WatchStore - Giỏ hàng</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --color-one: #ff7b00;
+        --color-two: #fff;
+        --color-text: #333;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+        padding-top: 120px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      /* Header Styles */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: var(--color-two);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      .header-top {
+        background-color: var(--color-one);
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+        padding: 10px 0;
+      }
+
+      .header-top span {
+        display: inline-block;
+        font-weight: bold;
+        font-size: 18px;
+        color: #fff;
+        position: relative;
+        left: -100%;
+        animation: slideRight 15s linear infinite;
+      }
+
+      @keyframes slideRight {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      .header-main .inner-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+      }
+
+      .header-main .inner-logo a {
+        color: var(--color-one);
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+
+      .header-main .inner-logo span {
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .header-main .inner-logo img {
+        height: 48px;
+        margin-right: 10px;
+      }
+
+      .header-main .inner-menu {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .search-box {
+        position: relative;
+        width: 300px;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+      }
+
+      .search-box button {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+      }
+
+      .header-icons {
+        display: flex;
+        gap: 20px;
+      }
+
+      .icon-wrapper {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .icon-wrapper i {
+        font-size: 22px;
+        color: var(--color-text);
+        transition: color 0.3s;
+      }
+
+      .icon-wrapper:hover i {
+        color: var(--color-one);
+      }
+
+      .badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: var(--color-one);
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Breadcrumb */
+      .breadcrumb {
+        padding: 15px 0;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .breadcrumb a {
+        color: #666;
+        text-decoration: none;
+      }
+
+      .breadcrumb a:hover {
+        color: var(--color-one);
+      }
+
+      /* Loading */
+      .loading {
+        text-align: center;
+        padding: 50px 20px;
+        color: #666;
+      }
+
+      .loading i {
+        font-size: 40px;
+        margin-bottom: 20px;
+      }
+
+      /* Cart Section */
+      .cart-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .cart-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+        border-bottom: 2px solid var(--color-one);
+        padding-bottom: 10px;
+      }
+
+      .cart-items {
+        margin-bottom: 30px;
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+        gap: 20px;
+      }
+
+      .cart-item-image {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cart-item-image img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .cart-item-info {
+        flex: 1;
+      }
+
+      .cart-item-name {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .cart-item-sku {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .cart-item-price {
+        font-size: 18px;
+        font-weight: bold;
+        color: #d70018;
+      }
+
+      .cart-item-quantity {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .quantity-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ddd;
+        background: #f8f9fa;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .quantity-btn:hover {
+        background: var(--color-one);
+        color: white;
+        border-color: var(--color-one);
+      }
+
+      .quantity-input {
+        width: 50px;
+        height: 30px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .cart-item-total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #d70018;
+        min-width: 100px;
+        text-align: right;
+      }
+
+      .cart-item-remove {
+        color: #666;
+        cursor: pointer;
+        transition: color 0.3s;
+        padding: 5px;
+      }
+
+      .cart-item-remove:hover {
+        color: #d70018;
+      }
+
+      .cart-summary {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 25px;
+        margin-top: 20px;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+
+      .summary-row.total {
+        font-size: 20px;
+        font-weight: bold;
+        color: #d70018;
+        border-top: 1px solid #ddd;
+        padding-top: 15px;
+        margin-top: 15px;
+      }
+
+      .cart-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        gap: 20px;
+      }
+
+      .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .btn-continue {
+        background: white;
+        color: var(--color-one);
+        border: 2px solid var(--color-one);
+      }
+
+      .btn-continue:hover {
+        background: #fff5f5;
+      }
+
+      .btn-checkout {
+        background: var(--color-one);
+        color: white;
+      }
+
+      .btn-checkout:hover {
+        background: #e56a00;
+      }
+
+      .empty-cart {
+        text-align: center;
+        padding: 50px 20px;
+      }
+
+      .empty-cart i {
+        font-size: 64px;
+        color: #ddd;
+        margin-bottom: 20px;
+      }
+
+      .empty-cart p {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      /* Checkout Styles */
+      .checkout-section {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .checkout-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+        border-bottom: 2px solid var(--color-one);
+        padding-bottom: 10px;
+      }
+
+      .checkout-form {
+        background: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .form-section {
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-title i {
+        color: var(--color-one);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--color-one);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .payment-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .payment-method {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .payment-method:hover {
+        border-color: var(--color-one);
+      }
+
+      .payment-method.selected {
+        border-color: var(--color-one);
+        background: #fff5f5;
+      }
+
+      .payment-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .payment-icon {
+        width: 40px;
+        height: 40px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .payment-name {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .payment-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.4;
+      }
+
+      .order-summary {
+        background: #fff;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+        position: sticky;
+        top: 140px;
+      }
+
+      .order-items {
+        margin-bottom: 20px;
+      }
+
+      .order-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+        gap: 15px;
+      }
+
+      .order-item-image {
+        width: 60px;
+        height: 60px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .order-item-image img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .order-item-info {
+        flex: 1;
+      }
+
+      .order-item-name {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .order-item-price {
+        font-size: 14px;
+        color: #d70018;
+        font-weight: 600;
+      }
+
+      .order-item-quantity {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .order-totals {
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+      }
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .total-row.final {
+        font-size: 18px;
+        font-weight: bold;
+        color: #d70018;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        margin-top: 10px;
+      }
+
+      /* Confirmation Styles */
+      .confirmation-section {
+        padding: 30px 0;
+        margin-bottom: 30px;
+      }
+
+      .confirmation-box {
+        background: var(--color-two);
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .confirmation-icon {
+        color: #28a745;
+        font-size: 60px;
+        margin-bottom: 20px;
+      }
+
+      .confirmation-title {
+        font-size: 28px;
+        color: #28a745;
+        margin-bottom: 10px;
+      }
+
+      .confirmation-text {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .order-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 30px;
+        text-align: left;
+        border-top: 1px dashed #ccc;
+        padding-top: 30px;
+      }
+
+      .info-card {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 6px;
+        border-left: 5px solid var(--color-one);
+      }
+
+      .info-card h4 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: var(--color-one);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .info-card p {
+        font-size: 14px;
+        margin-bottom: 8px;
+        color: #555;
+      }
+
+      .info-card strong {
+        color: var(--color-text);
+      }
+
+      .order-details-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+      }
+
+      .order-details-table th,
+      .order-details-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+      }
+
+      .order-details-table th {
+        background-color: #f1f1f1;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .item-name {
+        font-weight: 500;
+        color: var(--color-text);
+      }
+
+      .item-price {
+        color: #d70018;
+        font-weight: 600;
+      }
+
+      .order-summary-footer {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        max-width: 400px;
+        margin-left: auto;
+        text-align: right;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 16px;
+      }
+
+      .summary-row.final {
+        font-size: 20px;
+        font-weight: bold;
+        color: #d70018;
+        padding-top: 10px;
+        border-top: 1px dashed #ccc;
+      }
+
+      .btn-home {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 10px 30px;
+        background: var(--color-one);
+        color: var(--color-two);
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background 0.3s;
+      }
+
+      .btn-home:hover {
+        background: #e56a00;
+      }
+
+      /* Footer */
+      .footer {
+        background-color: #000;
+        color: #fff;
+        padding: 50px 60px 20px;
+        font-family: "Arial", sans-serif;
+      }
+
+      .footer-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+      }
+
+      .footer-column h3 {
+        color: #ff7c00;
+        margin-bottom: 15px;
+        font-size: 18px;
+        text-transform: uppercase;
+      }
+
+      .footer-column ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-column ul li {
+        margin-bottom: 8px;
+      }
+
+      .footer-column ul li a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .footer-column ul li a:hover {
+        color: #ff7c00;
+      }
+
+      .footer-column p {
+        margin: 6px 0;
+        color: #ccc;
+      }
+
+      .footer-column .highlight {
+        color: #ff7c00;
+        margin-top: 15px;
+      }
+
+      .social-icons a {
+        color: #fff;
+        margin-right: 12px;
+        font-size: 20px;
+        transition: color 0.3s;
+      }
+
+      .social-icons a:hover {
+        color: #ff7c00;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #333;
+        margin-top: 40px;
+        padding-top: 15px;
+        text-align: center;
+        font-size: 13px;
+        color: #aaa;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .cart-item {
+          flex-direction: column;
+          text-align: center;
+          gap: 15px;
+        }
+
+        .cart-item-info {
+          text-align: center;
+        }
+
+        .cart-item-quantity {
+          justify-content: center;
+        }
+
+        .cart-actions {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .checkout-section {
+          grid-template-columns: 1fr;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .order-summary {
+          position: static;
+        }
+
+        .order-info-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <span
+          >🔥 ƯU ĐÃI ĐẶC BIỆT: Giảm 20% cho đơn hàng đầu tiên - Miễn phí vận
+          chuyển toàn quốc 🔥</span
+        >
+      </div>
+      <div class="header-main">
+        <div class="container">
+          <div class="inner-wrap">
+            <div class="inner-logo">
+              <a href="cart.html">
+                <img
+                  src="https://via.placeholder.com/48x48?text=LOGO"
+                  alt="WatchStore"
+                />
+                <span>WATCHSTORE</span>
+              </a>
+            </div>
+            <div class="inner-menu">
+              <div class="search-box">
+                <input type="text" placeholder="Tìm kiếm sản phẩm..." />
+                <button><i class="fas fa-search"></i></button>
+              </div>
+              <div class="header-icons">
+                <div class="icon-wrapper" id="wishlist-icon">
+                  <i class="far fa-heart"></i>
+                  <div class="badge" id="wishlist-count">2</div>
+                </div>
+                <div class="icon-wrapper" id="cart-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                  <div class="badge" id="cart-count">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content sẽ được thay đổi bằng JavaScript -->
+    <div id="app">
+      <div class="container">
+        <div class="loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Đang tải...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-container">
+          <div class="footer-column">
+            <h3>Về WatchStore</h3>
+            <ul>
+              <li><a href="#">Giới thiệu</a></li>
+              <li><a href="#">Tuyển dụng</a></li>
+              <li><a href="#">Chính sách bảo mật</a></li>
+              <li><a href="#">Chính sách giải quyết khiếu nại</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Hỗ trợ khách hàng</h3>
+            <ul>
+              <li><a href="#">Hướng dẫn mua hàng</a></li>
+              <li><a href="#">Phương thức thanh toán</a></li>
+              <li><a href="#">Chính sách đổi trả</a></li>
+              <li><a href="#">Chính sách bảo hành</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>Liên hệ</h3>
+            <ul>
+              <li>
+                <i class="fas fa-map-marker-alt"></i> 123 Nguyễn Trãi, Q.1,
+                TP.HCM
+              </li>
+              <li><i class="fas fa-phone"></i> 1800.9999</li>
+              <li><i class="fas fa-envelope"></i> support@watchstore.vn</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          &copy; 2023 WatchStore. Tất cả các quyền được bảo lưu.
+        </div>
+      </div>
+    </footer>
+
+    <script src="cart.js"></script>
+  </body>   
+</html>

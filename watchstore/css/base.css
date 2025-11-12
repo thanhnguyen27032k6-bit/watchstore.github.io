@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Arima:wght@100..700&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Nata+Sans:wght@100..900&family=Prata&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    margin: 0;
+}
+:root{
+    --color-one: #FE7902;
+    --color-two: #F1F3F4;
+    --color-text: #5B6C8E;
+
+
+    --font :'Inria Serif' , serif;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+a {
+    text-decoration: none;
+}
+body{
+    font-family: var(--font);
+    color: var(--color-text);
+}
