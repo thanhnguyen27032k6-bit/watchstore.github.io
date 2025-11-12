@@ -9,6 +9,7 @@
     
         <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/modal.css">
     </head>
     <body>
       
@@ -34,11 +35,11 @@
                         <li><a href="#" id="nu-link">Nữ</a></li>
                       </ul>
                     </div>
-
                     
                     <div class="inner-search">
                         <input type="text" id="search-input" placeholder="Tìm là thấy">
                         <button id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        
                         <a href="#" class="cart">
                             <i class="fa-solid fa-bag-shopping"></i>
                             <span>0</span>
@@ -48,8 +49,15 @@
                             <i class="fa-regular fa-heart"></i>
                             <span>(0)</span>
                         </a>
+                        <a href="#" id="login-btn" class="user-login">
+                          <i class="fa-regular fa-user"></i> Đăng nhập
+                        </a>
                     </div>
-                    <div id="headerProfileContainer"></div>
+                    
+
+
+
+                   
                 </div>
               </div>
             </div>
@@ -834,8 +842,234 @@
     <!-- end thanh so sánh-->
   <!-- Font Awesome Icons -->
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> -->
-   <script src="js/main.js"></script>
-   <script src="js/data.js"></script>
-    </body>
+
+
+
+
+
+
+
+
+
+<!-- chi tiết  -->
+ <!-- ===== MODAL CHI TIẾT SẢN PHẨM ===== -->
+<!-- Copy đoạn này vào cuối file index.html, TRƯỚC thẻ </body> -->
+
+<div id="productDetailModal">
+  <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+          <h2>Chi Tiết Sản Phẩm</h2>
+          <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+          <!-- Image Gallery -->
+          <div class="product-gallery">
+              <div class="main-image-container">
+                  <img id="modalMainImage" src="" alt="Product Image">
+              </div>
+              <div class="thumbnail-container">
+                  <img class="thumbnail active" src="" alt="Thumbnail 1">
+                  <img class="thumbnail" src="" alt="Thumbnail 2">
+                  <img class="thumbnail" src="" alt="Thumbnail 3">
+                  <img class="thumbnail" src="" alt="Thumbnail 4">
+              </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="product-info">
+              <div>
+                  <h1 class="product-title" id="modalProductName">Tên sản phẩm</h1>
+                  <span class="product-id">Mã SP: <span id="modalProductId">XU001</span></span>
+              </div>
+
+              <div class="price-section">
+                  <div class="current-price" id="modalPrice">10.408.000 ₫</div>
+                  <div class="old-price-section">
+                      <span class="old-price" id="modalOldPrice">13.010.000đ</span>
+                      <span class="discount-badge" id="modalDiscount">-20%</span>
+                  </div>
+              </div>
+
+              <div class="action-buttons">
+                  <button class="btn btn-add-cart">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <circle cx="9" cy="21" r="1"></circle>
+                          <circle cx="20" cy="21" r="1"></circle>
+                          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                      </svg>
+                      Thêm vào giỏ
+                  </button>
+                  <button class="btn btn-buy-now">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                      </svg>
+                      Mua ngay
+                  </button>
+              </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs-container">
+              <div class="tabs-header">
+                  <button class="tab-btn active" data-tab="specs">Thông số kỹ thuật</button>
+                  <button class="tab-btn" data-tab="description">Mô tả chi tiết</button>
+                  <button class="tab-btn" data-tab="warranty">Bảo hành & Đổi trả</button>
+              </div>
+
+              <!-- Tab: Thông số kỹ thuật -->
+              <div id="specs" class="tab-panel active">
+                  <table class="specs-table">
+                      <tr>
+                          <td>Thương hiệu</td>
+                          <td id="modalBrand">Orient</td>
+                      </tr>
+                      <tr>
+                          <td>Kích thước mặt</td>
+                          <td id="modalSize">40.8mm</td>
+                      </tr>
+                      <tr>
+                          <td>Giới tính</td>
+                          <td id="modalGender">Nam</td>
+                      </tr>
+                      <tr>
+                          <td>Chất liệu dây</td>
+                          <td id="modalStrap">Thép không gỉ</td>
+                      </tr>
+                      <tr>
+                          <td>Chống nước</td>
+                          <td id="modalWaterResist">5ATM (50m)</td>
+                      </tr>
+                      <tr>
+                          <td>Bảo hành</td>
+                          <td>5 năm chính hãng</td>
+                      </tr>
+                  </table>
+              </div>
+
+              <!-- Tab: Mô tả chi tiết -->
+              <div id="description" class="tab-panel">
+                  <div class="description-content" id="modalDescription">
+                      <p>Đang tải thông tin...</p>
+                  </div>
+              </div>
+
+              <!-- Tab: Bảo hành -->
+              <div id="warranty" class="tab-panel">
+                  <div class="description-content">
+                      <h4>🛡️ Chính sách bảo hành:</h4>
+                      <ul>
+                          <li>Bảo hành chính hãng 5 năm toàn quốc</li>
+                          <li>Thay pin miễn phí trọn đời</li>
+                          <li>Bảo dưỡng máy định kỳ miễn phí</li>
+                          <li>Bảo hành 100% các lỗi từ nhà sản xuất</li>
+                      </ul>
+                      <h4>🔄 Chính sách đổi trả:</h4>
+                      <ul>
+                          <li>Đổi hàng trong 7 ngày nếu có lỗi từ nhà sản xuất</li>
+                          <li>Hoàn tiền 100% nếu phát hiện hàng giả</li>
+                          <li>Hỗ trợ đổi size dây miễn phí</li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+<script src="js/main.js"></script>
+<script src="js/data.js"></script>
+<script src="js/product-details.js"></script>
+
+
+
+
+
+<!-- ========== KHU VỰC USER LOGIN/REGISTER ========== -->
+<div class="login-page-wrapper" id="user-login-wrapper" style="display:none;">
+  <div class="login-container">
+    <div class="login-form-area">
+      <h1 class="title-main">Đăng nhập Watchsmember</h1>
+      <form class="login-form">
+        <div class="form-group">
+          <label for="login-phone">Số điện thoại</label>
+          <input type="tel" id="login-phone" class="login-phone" placeholder="Nhập số điện thoại của bạn" />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Mật khẩu</label>
+          <input type="password" id="login-password" class="login-password" placeholder="Nhập mật khẩu của bạn" />
+        </div>
+        <button type="submit" class="btn-login">Đăng nhập</button>
+      </form>
+
+      <div class="social-login-section">
+        <p>Hoặc đăng nhập bằng</p>
+        <div class="google-login-button-mock">
+          <img src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp" alt="Google icon" class="google-icon" />
+          Google
+        </div>
+        <div class="register">
+          <span>Bạn chưa có tài khoản?</span>
+          <button type="button" onclick="showRegisterOverlay()">Đăng ký ngay</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- overlay đăng ký -->
+    <div id="overlay" style="display:none;">
+      <div class="register-container">
+        <div class="register-header">
+          <h1>Đăng ký thành viên <span style="color:#f39c12;">WSMEMBER</span></h1>
+        </div>
+
+        <form class="register-form" novalidate>
+          <div class="register-grid">
+            <div class="register-form-group">
+              <label for="reg-fullname">Họ và tên</label>
+              <input type="text" id="reg-fullname" class="register-fullname" placeholder="Nhập họ và tên" />
+            </div>
+
+            <div class="register-form-group">
+              <label for="reg-phone">Số điện thoại</label>
+              <input type="tel" id="reg-phone" class="register-phone" placeholder="Nhập số điện thoại" />
+            </div>
+
+            <div class="register-form-group">
+              <label for="reg-password">Mật khẩu</label>
+              <input type="password" id="reg-password" class="register-password" placeholder="Nhập mật khẩu" />
+            </div>
+
+            <div class="register-form-group">
+              <label for="reg-pconfirm">Nhập lại mật khẩu</label>
+              <input type="password" id="reg-pconfirm" class="register-confirm" placeholder="Nhập lại mật khẩu" />
+            </div>
+          </div>
+
+          <div class="register-actions">
+            <button type="button" class="register-btn-back" onclick="hideRegisterOverlay()">&#x2039; Quay lại đăng nhập</button>
+            <button type="submit" id="btnSubmit" class="register-btn-submit">Hoàn tất đăng ký</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="benefits-area">
+      <h2 class="benefits-title">Gia nhập thành viên Watchstore<br>Nhận ưu đãi hấp dẫn 🎁</h2>
+      <ul>
+        <li>Chiết khấu đến 5%</li>
+        <li>Miễn phí giao hàng toàn quốc</li>
+        <li>Tặng voucher sinh nhật đến 500.000đ</li>
+        <li>Trợ giá thu cũ đổi mới</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- ========== END USER LOGIN/REGISTER ========== -->
+
     </body>
     </html>
