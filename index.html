@@ -407,815 +407,82 @@
     </section>
     <!--End Section của Hãng-->
 
-    <!-- Page Xu hướng  -->
-    <section id="xuhuong" class="page" class="page hidden">
-      <!--Lịch sử xem-->
-      <section
-        id="viewed-history-section-xuhuong"
-        class="container viewed-history-section hidden-history"
-        style="padding-top: 50px; padding-bottom: 20px"
-      >
-        <div class="container">
-          <div class="history-header">
-            <h2 class="history-title">Sản phẩm đã xem</h2>
-            <button
-              id="clear-history-button"
-              class="clear-history-button"
-              style="display: none"
-            >
-              Xóa lịch sử
-            </button>
-          </div>
-          <div id="viewed-products-container" class="product-list"></div>
-        </div>
-      </section>
-      <!--Bo Loc-->
-      <div class="container">
-        <h1 class="page-title-main">
-          Xu Hướng
-          <span class="badge-chinhhang"
-            ><i class="fa-solid fa-star"></i> 100% chính hãng</span
-          >
-        </h1>
-      </div>
-      <div class="filter-options container">
-        <div class="filter-group">
-          <select
-            id="price-filter-xuhuong"
-            class="filter-select"
-            data-filter-key="price"
-          >
-            <option value="">-- Tất cả mức giá --</option>
-            <option value="<1M">DƯỚI 1 TRIỆU</option>
-            <option value="1M-3M">1 - 3 TRIỆU</option>
-            <option value="3M-5M">3 - 5 TRIỆU</option>
-            <option value=">5M">TRÊN 5 TRIỆU</option>
-          </select>
-        </div>
+   <!-- Page Xu hướng -->
+<section id="xuhuong" class="page">
+  <div class="container">
+    <h1 class="page-title-main">Xu hướng 2025</h1>
+  </div>
+  <div id="xuhuong-products" class="product-list product-list-container"></div>
+</section>
 
-        <div class="filter-group">
-          <select
-            id="brand-filter-xuhuong"
-            class="filter-select"
-            data-filter-key="brand"
-          >
-            <option value="">-- Tất cả hãng --</option>
-            <option value="Casio">CASIO</option>
-            <option value="Tissot">TISSOT</option>
-            <option value="Orient">ORIENT</option>
-            <option value="Seiko">SEIKO</option>
-            <option value="Citizen">CITIZEN</option>
-            <option value="Bonest Gatti">BONEST GATTI</option>
-            <option value="Olym Pianus">OLYM PIANUS</option>
-          </select>
-        </div>
-      </div>
+<!-- Đồng hồ Nam -->
+<section id="nam" class="page">
+  <div class="container">
+    <h1 class="page-title-main">Đồng Hồ Nam <span class="badge-chinhhang"><i class="fa-solid fa-star"></i> 100% chính hãng</span></h1>
+  </div>
 
-      <div class="product-list product-list-container">
-        <!-- CASIO -->
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/ra-ar0007s10b-1-633473945-6512684-1712670699-400x400.jpg"
-            alt="Casio AE-1200WHD-1A"
-          />
-          <div class="product-name">
-            Orient 40.8mm RA-AR0007S30B (RA-AR0007S10B)
-          </div>
-          <div class="product-price">10.408.000 ₫</div>
-          <div class="product-oldprice">13.010.000đ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
+  <div class="product-list product-list-container" id="nam-products"></div>
+</section>
 
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/snk807k2-1712554669-400x400.jpg"
-            alt="Casio MTP-1374L-1A"
-          />
-          <div class="product-name">Seiko 37mm SNK807K2</div>
-          <div class="product-price">5.040.000 ₫</div>
-          <div class="product-oldprice">5.600.000đ (-10%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
 
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/bg5804-a2-1-750261156-1218272464-1712669786-400x400.jpg"
-            alt="Orient RA-AA0B02R39B"
-          />
-          <div class="product-name">Bentley 34mm BL1869-101LWWB</div>
-          <div class="product-price">3.370.000 ₫</div>
-          <div class="product-oldprice">4.500.000đ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
+ <!-- Đồng hồ Nữ -->
+<section id="nu" class="page">
+  <div class="container">
+    <h1 class="page-title-main">Đồng Hồ Nữ <span class="badge-chinhhang"><i class="fa-solid fa-star"></i> 100% chính hãng</span></h1>
+  </div>
 
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/bl1869-101lwwb-2-1675846115609-1712591040-400x400.jpg"
-            alt="Olym Pianus OP990-45ADGS"
-          />
-          <div class="product-name">Citizen 30mm EM0320-59D</div>
-          <div class="product-price">7.670.000₫</div>
-          <div class="product-oldprice">11.800.000đ (-35%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/em0320-59d-1712572339-400x400.jpg"
-            alt="Olym Pianus OP990-45ADGS"
-          />
-          <div class="product-name">Olym Pianus 40mm OP89322GSR-N</div>
-          <div class="product-price">3.950.000 ₫</div>
-          <div class="product-oldprice">4.740.000đ (-17%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/bg5606-a1-1-39375261-1339125135-1712669082-400x400.jpg"
-            alt="Tissot T035.407.36.051.01"
-          />
-          <div class="product-name">Bonest Gatti 45mm BG4001-R2</div>
-          <div class="product-price">6.448.750 ₫</div>
-          <div class="product-oldprice">18.000.000đ (-40%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
+  <div class="product-list product-list-container" id="nu-products"></div>
+</section>
 
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/og358-477054415-1385737694-1712581494-400x400.jpg"
-            alt="Tissot T137.407.11.041.00"
-          />
-          <div class="product-name">Bonest Gatti 47mm BG5606-A1</div>
-          <div class="product-price">17.900.000 ₫</div>
-          <div class="product-oldprice">20.610.000đ (-13%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
 
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/hbr-996-1-1211435193-446273722-1712666735-400x400.jpg"
-            alt="Tissot T006.407.36.053.00"
-          />
-          <div class="product-name">Hanboro 42mm HBR-996</div>
-          <div class="product-price">4.675.000 ₫</div>
-          <div class="product-oldprice">5.500.000đ (-15%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/0607194-1712585777-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Movado 40mm 0607194</div>
-          <div class="product-price">17.900.000 ₫</div>
-          <div class="product-oldprice">20.610.000đ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
 
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/re-av0005l00b-1712565902-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Seiko 42.5mm SRPD53K1</div>
-          <div class="product-price">1.475.000 ₫</div>
-          <div class="product-oldprice">3.500.000 (-33%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/28-1712662821-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Tissot 32mm T099.207.11.113.00</div>
-          <div class="product-price">11.475.000 ₫</div>
-          <div class="product-oldprice">13.500.000 (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/fl-661303999-1468444074-1712574475-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Olym Pianus 42mm OP990-45ADGS</div>
-          <div class="product-price">11.475.000 ₫</div>
-          <div class="product-oldprice">13.500.000 (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/380-451dlw-1-1654585952376-1712585553-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Carnival 40mm 8108G-VT-X</div>
-          <div class="product-price">11.475.000 ₫</div>
-          <div class="product-oldprice">13.500.000 (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/8907g-vt-t-1-348948390-593092946-1712668541-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">I&W Carnival 42mm 735G5</div>
-          <div class="product-price">11.275.000 ₫</div>
-          <div class="product-oldprice">13.500.000 (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHOXUHUONG/ra-ar0007s10b-1-633473945-6512684-1712670699-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">I&W Carnival 42mm 735G5</div>
-          <div class="product-price">10.475.000 ₫</div>
-          <div class="product-oldprice">14.500.000 (-27%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-      </div>
-    </section>
-    <!--End Page Xu hướng  -->
+  <!-- Hot Sale -->
+<div class="hotsale-product">
+  <div class="banner-hotsale" style="background-image: url('image/banner/banner-xu-huong-home.jpg')"></div>
+  <div class="product-list" id="hotsale-products"></div>
+</div>
 
-    <!-- Page nam  -->
-    <section id="nam" class="page" class="page hidden">
-      <!--Lịch sử xem-->
-      <section
-        id="viewed-history-section-xuhuong"
-        class="container viewed-history-section hidden-history"
-        style="padding-top: 50px; padding-bottom: 20px"
-      >
-        <div class="container">
-          <div class="history-header">
-            <h2 class="history-title">Sản phẩm đã xem</h2>
-            <button
-              id="clear-history-button"
-              class="clear-history-button"
-              style="display: none"
-            >
-              Xóa lịch sử
-            </button>
-          </div>
-          <div id="viewed-products-container" class="product-list"></div>
-        </div>
-      </section>
-      <!--Bo Loc-->
-      <div class="container">
-        <h1 class="page-title-main">
-          Đồng Hồ Nam
-          <span class="badge-chinhhang"
-            ><i class="fa-solid fa-star"></i> 100% chính hãng</span
-          >
-        </h1>
-      </div>
-      <div class="filter-options container">
-        <div class="filter-group">
-          <select
-            id="price-filter-nam"
-            class="filter-select"
-            data-filter-key="price"
-          >
-            <option value="">-- Tất cả mức giá --</option>
-            <option value="<1M">DƯỚI 1 TRIỆU</option>
-            <option value="1M-3M">1 - 3 TRIỆU</option>
-            <option value="3M-5M">3 - 5 TRIỆU</option>
-            <option value=">5M">TRÊN 5 TRIỆU</option>
-          </select>
-        </div>
+<section class="product-section">
+  <div class="section-header">
+    <h2 class="text">ĐỒNG HỒ ĐEO TAY CHÍNH HÃNG</h2>
+    <p><a href="#">WatchStore</a> cung cấp đa dạng mẫu đồng hồ theo nhiều phong cách khác nhau</p>
+  </div>
 
-        <div class="filter-group">
-          <select
-            id="brand-filter-nam"
-            class="filter-select"
-            data-filter-key="brand"
-          >
-            <option value="">-- Tất cả hãng --</option>
-            <option value="Casio">CASIO</option>
-            <option value="Tissot">TISSOT</option>
-            <option value="Orient">ORIENT</option>
-            <option value="Seiko">SEIKO</option>
-            <option value="Citizen">CITIZEN</option>
-            <option value="Bonest Gatti">BONEST GATTI</option>
-            <option value="Olym Pianus">OLYM PIANUS</option>
-          </select>
-        </div>
-      </div>
+  <div class="hotsale-banner">
+    <button class="hotsale-btn">CASIO MÙA HÈ 2025 GIẢM GIÁ SHOCK 45% - FLASH SALES</button>
+  </div>
 
-      <div class="product-list product-list-container">
-        <!-- CASIO -->
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/CASIO/1-khung-sp-1295457203-1427251284-1712553992-400x400.jpg"
-            alt="Casio AE-1200WHD-1A"
-          />
-          <div class="product-name">Casio 40mm Nam MTP-VT01L-1BUDF</div>
-          <div class="product-price">945.600 ₫</div>
-          <div class="product-oldprice">1.506.000₫ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/CASIO/1-khung-sp-398023451-1303775603-1712567036-400x400.jpg"
-            alt="Casio MTP-1374L-1A"
-          />
-          <div class="product-name">Casio 40mm Nam MTP-V005D-2B5UDF</div>
-          <div class="product-price">768.800 ₫</div>
-          <div class="product-oldprice">961.000đ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/CASIO/mtp-1183a-7adf-61031483-1093893374-1712563673-400x400.jpg"
-            alt="Orient RA-AA0B02R39B"
-          />
-          <div class="product-name">Casio 38.5mm Nam MTP-1183A-7ADF</div>
-          <div class="product-price">1.000.800 ₫</div>
-          <div class="product-oldprice">1.251.000đ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/CASIO/mtp-v005d-2b5udf-1615935823-292418242-1712572700-400x400.jpg"
-            alt="Olym Pianus OP990-45ADGS"
-          />
-          <div class="product-name">Casio 41.5mm Nam MTP-V004L-1AUDF</div>
-          <div class="product-price">6.776.000₫</div>
-          <div class="product-oldprice">8.800.000₫ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/CASIO/aq-230a-7dmq-1157113970-680936365-1712565956-400x400.jpg"
-            alt="Olym Pianus OP990-45ADGS"
-          />
-          <div class="product-name">Casio 38.2 × 35.2 mm Nam F-91W-1DG</div>
-          <div class="product-price">500.000 ₫</div>
-          <div class="product-oldprice">800.000₫ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/TISSOT/l47052117-1-2061653098-399185788-1712575713-400x400.jpg"
-            alt="Tissot T035.407.36.051.01"
-          />
-          <div class="product-name">Bonest Gatti 47mm Nam BG5606-A1</div>
-          <div class="product-price">6.197.500 ₫</div>
-          <div class="product-oldprice">9.250.000 (-33%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <!--Tissot Nam-->
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/TISSOT/t006-2133685469-2118898420-1712571970-400x400.jpg"
-            alt="Tissot T137.407.11.041.00"
-          />
-          <div class="product-name">Tissot 40mm Nam T137.407.11.041.00</div>
-          <div class="product-price">17.900.000 ₫</div>
-          <div class="product-oldprice">20.610.000đ (-13%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/TISSOT/t137-407-16-041-00-1-1664596612185-1712585522-400x400.jpg"
-            alt="Tissot T006.407.36.053.00"
-          />
-          <div class="product-name">Tissot 40mm Nam T137.407.16.041.00</div>
-          <div class="product-price">17.900.000 ₫</div>
-          <div class="product-oldprice">20.610.000đ</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/TISSOT/t035-500423103-1639501352-1712572400-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Tissot 35mm Unisex T137.207.11.351.00</div>
-          <div class="product-price">17.900.000 ₫</div>
-          <div class="product-oldprice">20.610.000đ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/TISSOT/t137-679443174-610497435-1712585231-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Tissot 39.3mm Nam T006.407.36.263.00</div>
-          <div class="product-price">17.100.000 ₫</div>
-          <div class="product-oldprice">20.710.000đ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <!-- G-Shock -->
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/G-SHOCK/ga-100b-4adr-1_casiogshock_1716173817-400x400.jpg"
-            alt="Tissot T035.407.36.051.01"
-          />
-          <div class="product-name">Casio 51mm Nam GA-140AR-1ADR</div>
-          <div class="product-price">3.111.200₫</div>
-          <div class="product-oldprice">3.880.000₫ (-40%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/G-SHOCK/ga-100rs-2adr_19fd6afe0ede4bffb638bbce4181063b_3885f19f981145bcae503ba734300f1d_optimized-1650618808238-1712583433-400x400.jpg"
-            alt="Tissot T137.407.11.041.00"
-          />
-          <div class="product-name">Casio 51mm Nam GA-100RS-2ADR</div>
-          <div class="product-price">3.000.800 ₫</div>
-          <div class="product-oldprice">3.610.000đ (-13%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/G-SHOCK/ga-110c-1adr-1-1639902506797-1712578544-400x400.jpg"
-            alt="Tissot T006.407.36.053.00"
-          />
-          <div class="product-name">Casio 50mm Nam DW-6900JT-3DR</div>
-          <div class="product-price">2.980.800 ₫</div>
-          <div class="product-oldprice">3.726.000đ (-15%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/G-SHOCK/ga-140ar-1adr-1-1639930127857-1712578565-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Casio Nam MTG-B2000XMG-1ADR</div>
-          <div class="product-price">35.200.000 ₫</div>
-          <div class="product-oldprice">44.610.000đ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONAM/G-SHOCK/ga-735e-7adr-1-1640012014903-1712578658-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Casio 53.4mm Nam GA-735E-7ADR</div>
-          <div class="product-price">3.944.800 ₫</div>
-          <div class="product-oldprice">4.500.000 (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-      </div>
-    </section>
-    <!-- End Page nam  -->
-
-    <!-- Trang đồng hồ Nữ -->
-    <section id="nu" class="page" class="page hidden">
-      <!--Lịch sử xem-->
-      <section
-        id="viewed-history-section-xuhuong"
-        class="container viewed-history-section hidden-history"
-        style="padding-top: 50px; padding-bottom: 20px"
-      >
-        <div class="container">
-          <div class="history-header">
-            <h2 class="history-title">Sản phẩm đã xem</h2>
-            <button
-              id="clear-history-button"
-              class="clear-history-button"
-              style="display: none"
-            >
-              Xóa lịch sử
-            </button>
-          </div>
-          <div id="viewed-products-container" class="product-list"></div>
-        </div>
-      </section>
-      <!--Bo Loc-->
-      <div class="container">
-        <h1 class="page-title-main">
-          Đồng Hồ Nữ
-          <span class="badge-chinhhang"
-            ><i class="fa-solid fa-star"></i> 100% chính hãng</span
-          >
-        </h1>
-      </div>
-      <div class="filter-options container">
-        <div class="filter-group">
-          <select
-            id="price-filter-nu"
-            class="filter-select"
-            data-filter-key="price"
-          >
-            <option value="">-- Tất cả mức giá --</option>
-            <option value="<1M">DƯỚI 1 TRIỆU</option>
-            <option value="1M-3M">1 - 3 TRIỆU</option>
-            <option value="3M-5M">3 - 5 TRIỆU</option>
-            <option value=">5M">TRÊN 5 TRIỆU</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <select
-            id="brand-filter-nu"
-            class="filter-select"
-            data-filter-key="brand"
-          >
-            <option value="">-- Tất cả hãng --</option>
-            <option value="Casio">CASIO</option>
-            <option value="Tissot">TISSOT</option>
-            <option value="Orient">ORIENT</option>
-            <option value="Seiko">SEIKO</option>
-            <option value="Citizen">CITIZEN</option>
-            <option value="Bonest Gatti">BONEST GATTI</option>
-            <option value="Olym Pianus">OLYM PIANUS</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="product-list product-list-container">
-        <!-- CASIO -->
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/CASIO/ltp-v001gl-9budf-824457728-1701744936-1712554881-400x400.jpg"
-            alt="Casio AE-1200WHD-1A"
-          />
-          <div class="product-name">Casio 28.4mm Nữ LTP-V005L-7BUDF</div>
-          <div class="product-price">580.800 ₫</div>
-          <div class="product-oldprice">726.000đ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/CASIO/ltp-v001l-1budf-1712566842-400x400.jpg"
-            alt="Casio MTP-1374L-1A"
-          />
-          <div class="product-name">Casio 25mm Nữ LTP-V001GL-9BUDF</div>
-          <div class="product-price">677.600 ₫</div>
-          <div class="product-oldprice">847.000đ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/CASIO/ltp-v005l-7budf-463612440-806370569-1712554979-400x400.jpg"
-            alt="Orient RA-AA0B02R39B"
-          />
-          <div class="product-name">Casio 25mm Nữ LTP-V006L-4BUDF</div>
-          <div class="product-price">684.800 ₫</div>
-          <div class="product-oldprice">856.000đ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/CASIO/shb-100d-4adr-1712580798-400x400.jpg"
-            alt="Olym Pianus OP990-45ADGS"
-          />
-          <div class="product-name">Casio 41.5mm Nam MTP-V004L-1AUDF</div>
-          <div class="product-price">6.776.000₫</div>
-          <div class="product-oldprice">8.800.000₫ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/CASIO/ltp-v006l-4budf-1-1210488598-1537295250-1712555034-400x400.jpg"
-            alt="Olym Pianus OP990-45ADGS"
-          />
-          <div class="product-name">Casio 38.2 × 35.2 mm Nam F-91W-1DG</div>
-          <div class="product-price">500.000 ₫</div>
-          <div class="product-oldprice">800.000₫ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <!-- TISOT -->
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/TISSOT/t063-009-16-018-00-1-1654503342485-1712576998-400x400.jpg"
-            alt="Tissot T035.407.36.051.01"
-          />
-          <div class="product-name">Tissot 29mm Nữ T085.210.36.013.00</div>
-          <div class="product-price">5.550.000 ₫</div>
-          <div class="product-oldprice">9.500.000đ (-42%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/TISSOT/t085-1824755438-71512346-1712573413-400x400.jpg"
-            alt="Tissot T137.407.11.041.00"
-          />
-          <div class="product-name">Tissot 25mm Nữ T063.009.16.018.00</div>
-          <div class="product-price">5.590.000 ₫</div>
-          <div class="product-oldprice">9.790.000đ (-13%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/TISSOT/t085-210-36-013-00-2-1680058242594-1712571568-400x400.jpg"
-            alt="Tissot T006.407.36.053.00"
-          />
-          <div class="product-name">
-            Tissot 24.4x27.2mm Nữ T103.110.17.053.00
-          </div>
-          <div class="product-price">3.990.000 ₫</div>
-          <div class="product-oldprice">6.200.000đ (36%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/TISSOT/t103-656493960-1751704942-1712572240-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Tissot 28.5mm Nữ T085.210.22.013.00</div>
-          <div class="product-price">5.500.000</div>
-          <div class="product-oldprice">8.550.000đ (-35%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/TISSOT/t035-395967672-348891399-1712573390-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Tissot 33mm Nữ T035.246.16.111.00</div>
-          <div class="product-price">5.600.000 ₫</div>
-          <div class="product-oldprice">9.710.000đ (-38%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <!-- G-SHOCK nữ  -->
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/G-SHOCK/untitled-1-40803878-1686844001-1712664112-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Casio 45.4mm Nữ GA-2100MNG-7ADR</div>
-          <div class="product-price">2.944.800 ₫</div>
-          <div class="product-oldprice">4.500.000 (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/G-SHOCK/mtg-g1000rb-1adr-1641825275696-1712579930-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Casio 50mm Nữ DW-6900LU-3DR</div>
-          <div class="product-price">4.944.800 ₫</div>
-          <div class="product-oldprice">5.500.000 (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/G-SHOCK/mtg-b2000xmg-1adr-1712586638-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Casio 49mm Nữ GST-B200TJ-1ADR</div>
-          <div class="product-price">7.944.800 ₫</div>
-          <div class="product-oldprice">14.500.000 (-48%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/G-SHOCK/gma-s110mp-4a2dr-1-1640270419320-1712579019-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Casio 45.9mm Nữ GMA-S120NP-4ADR</div>
-          <div class="product-price">3.944.800 ₫</div>
-          <div class="product-oldprice">4.500.000 (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-        <div class="product-card">
-          <img
-            src="image/DONGHONU/G-SHOCK/gma-s120np-4adr-1712577862-400x400.jpg"
-            alt="Tissot T137.207.11.351.00"
-          />
-          <div class="product-name">Casio 46mm Nữ GMA-S110MP-4A2DR</div>
-          <div class="product-price">13.944.800 ₫</div>
-          <div class="product-oldprice">15.500.000 (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-      </div>
-    </section>
-    <!-- End Trang đồng hồ Nữ -->
-
-    <!-- SPMới  -->
-    <div class="hotsale-product">
-      <div
-        class="banner-hotsale"
-        style="background-image: url(/image/banner/banner-xu-huong-home.jpg)"
-      ></div>
-
-      <div class="product-list">
-        <div class="product-card">
-          <img
-            src="image/SPHOTSALE/1-khung-sp-1-1818542633-1853976209-1712563883-400x400.jpg"
-            alt="Casio AE-1200WHD-1A"
-          />
-          <div class="product-name">Casio 45x42.1mm Nam AE-1200WHD-1A</div>
-          <div class="product-price">1.204.800₫</div>
-          <div class="product-oldprice">1.506.000₫ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/SPHOTSALE/1-khung-sp-6676612-1785849039-1712554705-400x400.jpg"
-            alt="Casio MTP-1374L-1A"
-          />
-          <div class="product-name">Casio MTP-1374L-1A</div>
-          <div class="product-price">1.816.000₫</div>
-          <div class="product-oldprice">2.270.000₫ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/SPHOTSALE/op990-45adgs-gl-d-1-1655171724651-1712585288-400x400.jpg"
-            alt="Orient RA-AA0B02R39B"
-          />
-          <div class="product-name">Orient 42mm Nam RA-AA0B02R39B</div>
-          <div class="product-price">6.880.000₫</div>
-          <div class="product-oldprice">8.600.000₫ (-20%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="image/SPHOTSALE/ra-aa0b02r19b-2081811590-287106387-1712554040-400x400.jpg"
-            alt="Olym Pianus OP990-45ADGS"
-          />
-          <div class="product-name">Olym Pianus 42mm Nam OP990-45ADGS</div>
-          <div class="product-price">6.776.000₫</div>
-          <div class="product-oldprice">8.800.000₫ (-23%)</div>
-          <button class="compare-btn" type="button">So sánh</button>
-        </div>
-      </div>
-
-      <button class="find-more">TÌM HIỂU THÊM</button>
-    </div>
-
-    <!--End SPMới  -->
-
-    <!-- sản phẩm nổi bật -->
-
-    <section class="product-section">
-      <div class="section-header">
-        <h2 class="text">ĐỒNG HỒ ĐEO TAY CHÍNH HÃNG</h2>
-        <p>
-          <a href="#">WatchStore</a> cung cấp đa dạng mẫu đồng hồ theo nhiều
-          phong cách khác nhau
-        </p>
-      </div>
-
-      <div class="hotsale-banner">
-        <button class="hotsale-btn">
-          CASIO MÙA HÈ 2025 GIẢM GIÁ SHOCK 45% - FLASH SALES
-        </button>
-      </div>
-
-      <div class="product-categories">
-        <a href="#" class="brand-link" data-brand="Tissot">
-          <div class="category-item">
-            <img
-              src="image/SPNOIBAT/small-web-banner-tissot_1725589299.webp"
-              alt="Tissot sang trọng"
-            />
+  <div class="product-categories">
+    <a href="#" class="brand-link" data-brand="Tissot">
+        <div class="category-item">
+            <img src="image/SPNOIBAT/small-web-banner-tissot_1725589299.webp" alt="Tissot sang trọng">
             <p>Tissot sang trọng</p>
-          </div>
-        </a>
+        </div>
+    </a>
 
-        <a href="#" class="brand-link" data-brand="Casio">
-          <div class="category-item">
-            <img
-              src="image/SPNOIBAT/small-web-banner-casio-mtp_1725589299.webp"
-              alt="Baby-G cá tính"
-            />
+    <a href="#" class="brand-link" data-brand="Casio">
+        <div class="category-item">
+            <img src="image/SPNOIBAT/small-web-banner-casio-mtp_1725589299.webp" alt="Baby-G cá tính">
             <p>Casio MTP thanh lịch</p>
-          </div>
-        </a>
+        </div>
+    </a>
 
-        <a href="#" class="brand-link" data-brand="G-Shock">
-          <div class="category-item">
-            <img
-              src="image/SPNOIBAT/small-web-banner-g-shock_1725589299.webp"
-              alt="G-Shock thể thao"
-            />
+    <a href="#" class="brand-link" data-brand="G-Shock">
+        <div class="category-item">
+            <img src="image/SPNOIBAT/small-web-banner-g-shock_1725589299.webp" alt="G-Shock thể thao">
             <p>G-Shock thể thao</p>
-          </div>
-        </a>
+        </div>
+    </a> 
 
-        <a href="#" class="brand-link" data-brand="Rolex">
-          <div class="category-item">
-            <img
-              src="image/SPNOIBAT/small-web-banner-giong-rolex_1725589710.webp"
-              alt="Rolex"
-            />
+    <a href="#" class="brand-link" data-brand="Rolex">
+        <div class="category-item">
+            <img src="image/SPNOIBAT/small-web-banner-giong-rolex_1725589710.webp" alt="Rolex">
             <p>Giống Rolex</p>
-          </div>
-        </a>
-        <!-- ... thêm các item khác -->
-      </div>
-    </section>
-    <!-- End sản phẩm nổi bật -->
-
+        </div>
+    </a>
+    <!-- ... thêm các item khác -->
+  </div>
+</section>
     <!-- Giới thiệu cửa hàng  -->
     <section class="about-section">
       <div class="about-container">
@@ -1425,44 +692,49 @@
     <div id="productDetailModal" class="product-modal">
       <div class="modal-content">
         <span class="close-modal">&times;</span>
-
+    
         <div class="product-detail-container">
           <div class="left-section">
             <img id="modalProductImage" src="" alt="" />
           </div>
+    
           <div class="right-section">
             <h2 id="modalProductName"></h2>
+    
             <div class="price-box">
               <span id="modalCurrentPrice" class="current-price"></span>
               <span id="modalOldPrice" class="old-price"></span>
             </div>
+    
+            <!-- ⭐ Thêm mô tả sản phẩm -->
+            <p id="modalDescription" class="product-description"></p>
+    
             <div class="benefit-box">
               <ul>
-                <li>✅ 100% sản phẩm chính hãng12</li>
+                <li>✅ 100% sản phẩm chính hãng</li>
                 <li>🔁 Đổi trả trong 3 ngày nếu lỗi</li>
                 <li>🚚 Miễn phí vận chuyển toàn quốc</li>
                 <li>⚡ Giao hàng hỏa tốc trong ngày</li>
               </ul>
             </div>
+    
             <div class="btn-box">
               <button class="btn-buy">MUA NGAY</button>
               <button class="btn-cart">THÊM VÀO GIỎ</button>
             </div>
           </div>
         </div>
-
+    
         <div class="specs-section">
           <h3>Thông số sản phẩm</h3>
-          <table class="specs-table" id="specsTable">
-            <!-- Nội dung bảng thông số sẽ được thêm bằng JS -->
-          </table>
+          <table class="specs-table" id="specsTable"></table>
         </div>
       </div>
     </div>
+    
 
-    <script src="js/data.js"></script>
-    <script src="js/product-details.js"></script>
-    <script src="js/main.js"></script>
+  
+    
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         console.log("🛒 Khởi tạo hệ thống từ trang chủ...");
@@ -2203,39 +1475,6 @@
           }
         });
 
-        // Xử lý sự kiện click nút "So sánh" (thêm vào giỏ hàng)
-        document.addEventListener("click", function (e) {
-          if (e.target.classList.contains("compare-btn")) {
-            e.preventDefault();
-            const productCard = e.target.closest(".product-card");
-            if (productCard) {
-              const productName =
-                productCard.querySelector(".product-name").textContent;
-              const productPriceText =
-                productCard.querySelector(".product-price").textContent;
-              const productImage = productCard.querySelector("img").src;
-
-              const productPrice = parseInt(
-                productPriceText.replace(/\D/g, "")
-              );
-
-              if (!productName || !productPrice) {
-                console.error("❌ Không thể lấy thông tin sản phẩm");
-                return;
-              }
-
-              const productData = {
-                name: productName,
-                price: productPrice,
-                image: productImage,
-              };
-
-              // Sử dụng hàm có kiểm tra đăng nhập
-              addToCartWithAuth(productData);
-            }
-          }
-        });
-
         // Xử lý sự kiện click nút "MUA NGAY" trong modal
         document.addEventListener("click", function (e) {
           if (e.target.classList.contains("btn-buy")) {
@@ -2296,6 +1535,613 @@
         console.log("✅ Hệ thống giỏ hàng đã sẵn sàng!");
         console.log("🔐 Hệ thống kiểm tra đăng nhập đã sẵn sàng!");
       });
+      // ==================== HÀM XỬ LÝ MODAL THÔNG TIN TÀI KHOẢN ====================
+
+      function openAccountInfoModal() {
+        // Đóng bảng thông tin tài khoản trước
+        document.getElementById("accountInfoPanel").classList.remove("show");
+
+        // Cập nhật thông tin modal
+        updateAccountInfoModal();
+
+        // Hiển thị modal
+        document.getElementById("accountInfoModal").style.display = "flex";
+      }
+
+      function closeAccountInfoModal() {
+        document.getElementById("accountInfoModal").style.display = "none";
+      }
+
+      function updateAccountInfoModal() {
+        const userData = JSON.parse(localStorage.getItem("currentUser"));
+        const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+
+        if (userData) {
+          // Cập nhật thông tin từ currentUser
+          document.getElementById("modalAccountName").textContent =
+            userData.fullname || "Tên tài khoản";
+          document.getElementById("modalAccountEmail").textContent =
+            userData.email || "email@example.com";
+          document.getElementById("modalInfoFullname").textContent =
+            userData.fullname || "Chưa cập nhật";
+          document.getElementById("modalInfoPhone").textContent =
+            userData.phone || "Chưa cập nhật";
+          document.getElementById("modalInfoEmail").textContent =
+            userData.email || "Chưa cập nhật";
+
+          // Cập nhật avatar với chữ cái đầu
+          const firstLetter = (userData.fullname || "U")
+            .charAt(0)
+            .toUpperCase();
+          document.getElementById("modalAccountAvatar").textContent =
+            firstLetter;
+        }
+
+        // Cập nhật thông tin từ userInfo (dữ liệu đăng ký)
+        if (userInfo.birthdate) {
+          document.getElementById("modalInfoBirthdate").textContent =
+            formatDate(userInfo.birthdate);
+        } else {
+          document.getElementById("modalInfoBirthdate").textContent =
+            "Chưa cập nhật";
+        }
+
+        // Tạo mã thành viên từ số điện thoại
+        if (userData && userData.phone) {
+          const memberId = "WSM" + userData.phone.slice(-6);
+          document.getElementById("modalInfoMemberId").textContent = memberId;
+        } else {
+          document.getElementById("modalInfoMemberId").textContent =
+            "WSM001234";
+        }
+
+        document.getElementById("modalInfoJoinDate").textContent =
+          userInfo.joinDate
+            ? formatDate(userInfo.joinDate)
+            : formatDate(new Date().toISOString());
+        document.getElementById("modalInfoMemberLevel").textContent =
+          userInfo.memberLevel || "Vàng";
+        document.getElementById("modalInfoPoints").textContent =
+          (userInfo.points || 1250) + " điểm";
+      }
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("vi-VN");
+      }
+
+      // ==================== HÀM XỬ LÝ MODAL ĐỔI MẬT KHẨU ====================
+
+      function openChangePasswordModal() {
+        // Đóng modal thông tin tài khoản
+        closeAccountInfoModal();
+
+        // Reset form
+        document.getElementById("changePasswordForm").reset();
+        document.getElementById("passwordSuccessMessage").style.display =
+          "none";
+        resetPasswordErrors();
+        document.getElementById("strengthFill").style.width = "0%";
+
+        // Hiển thị modal
+        document.getElementById("changePasswordModal").style.display = "flex";
+      }
+
+      function closeChangePasswordModal() {
+        document.getElementById("changePasswordModal").style.display = "none";
+      }
+
+      function resetPasswordErrors() {
+        document.querySelectorAll(".error-message").forEach((error) => {
+          error.style.display = "none";
+        });
+        document.querySelectorAll(".form-input").forEach((input) => {
+          input.classList.remove("error");
+        });
+      }
+
+      function showPasswordError(errorId, message) {
+        const errorElement = document.getElementById(errorId);
+        errorElement.textContent = message;
+        errorElement.style.display = "block";
+
+        const inputId = errorId.replace("Error", "");
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+          inputElement.classList.add("error");
+        }
+      }
+
+      // ==================== HÀM XỬ LÝ MODAL CHỈNH SỬA THÔNG TIN ====================
+
+      function openEditInfoModal() {
+        // Đóng modal thông tin tài khoản
+        closeAccountInfoModal();
+
+        // Điền dữ liệu hiện tại vào form
+        populateEditForm();
+
+        // Reset lỗi
+        resetEditFormErrors();
+
+        // Ẩn thông báo thành công
+        document.getElementById("editSuccessMessage").style.display = "none";
+
+        // Hiển thị modal
+        document.getElementById("editInfoModal").style.display = "flex";
+      }
+
+      function closeEditInfoModal() {
+        document.getElementById("editInfoModal").style.display = "none";
+      }
+
+      function populateEditForm() {
+        const userData = JSON.parse(localStorage.getItem("currentUser"));
+        const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+
+        if (userData) {
+          document.getElementById("editFullname").value =
+            userData.fullname || "";
+          document.getElementById("editPhone").value = userData.phone || "";
+          document.getElementById("editEmail").value = userData.email || "";
+        }
+
+        if (userInfo.birthdate) {
+          // Format date để hiển thị trong input type="date"
+          const birthdate = new Date(userInfo.birthdate);
+          const formattedDate = birthdate.toISOString().split("T")[0];
+          document.getElementById("editBirthdate").value = formattedDate;
+        }
+      }
+
+      function resetEditFormErrors() {
+        document
+          .querySelectorAll("#editInfoForm .error-message")
+          .forEach((error) => {
+            error.style.display = "none";
+          });
+        document
+          .querySelectorAll("#editInfoForm .form-input")
+          .forEach((input) => {
+            input.classList.remove("error");
+          });
+      }
+
+      function showEditFormError(errorId, message) {
+        const errorElement = document.getElementById(errorId);
+        errorElement.textContent = message;
+        errorElement.style.display = "block";
+
+        const inputId = errorId.replace("Error", "");
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+          inputElement.classList.add("error");
+        }
+      }
+
+      // ==================== XỬ LÝ FORM CHỈNH SỬA ====================
+
+      function validateEditForm() {
+        let isValid = true;
+        resetEditFormErrors();
+
+        // Validate họ và tên
+        const fullname = document.getElementById("editFullname").value.trim();
+        if (!fullname) {
+          showEditFormError("editFullnameError", "Vui lòng nhập họ và tên");
+          isValid = false;
+        } else if (fullname.length < 2) {
+          showEditFormError(
+            "editFullnameError",
+            "Họ và tên phải có ít nhất 2 ký tự"
+          );
+          isValid = false;
+        }
+
+        // Validate số điện thoại
+        const phone = document.getElementById("editPhone").value.trim();
+        const phoneRegex = /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/;
+        if (!phone) {
+          showEditFormError("editPhoneError", "Vui lòng nhập số điện thoại");
+          isValid = false;
+        } else if (!phoneRegex.test(phone)) {
+          showEditFormError("editPhoneError", "Số điện thoại không hợp lệ");
+          isValid = false;
+        }
+
+        // Validate email
+        const email = document.getElementById("editEmail").value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+          showEditFormError("editEmailError", "Vui lòng nhập email");
+          isValid = false;
+        } else if (!emailRegex.test(email)) {
+          showEditFormError("editEmailError", "Email không hợp lệ");
+          isValid = false;
+        }
+
+        // Validate ngày sinh (không bắt buộc)
+        const birthdate = document.getElementById("editBirthdate").value;
+        if (birthdate) {
+          const birthDate = new Date(birthdate);
+          const today = new Date();
+          const minDate = new Date();
+          minDate.setFullYear(today.getFullYear() - 100);
+
+          if (birthDate > today) {
+            showEditFormError(
+              "editBirthdateError",
+              "Ngày sinh không thể ở tương lai"
+            );
+            isValid = false;
+          } else if (birthDate < minDate) {
+            showEditFormError("editBirthdateError", "Ngày sinh không hợp lệ");
+            isValid = false;
+          }
+        }
+
+        return isValid;
+      }
+
+      function saveUserInfoUpdates(formData) {
+        try {
+          // Cập nhật currentUser
+          const currentUser =
+            JSON.parse(localStorage.getItem("currentUser")) || {};
+          currentUser.fullname = formData.fullname;
+          currentUser.phone = formData.phone;
+          currentUser.email = formData.email;
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+          // Cập nhật userInfo chi tiết
+          const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+          userInfo.fullname = formData.fullname;
+          userInfo.phone = formData.phone;
+          userInfo.email = formData.email;
+          userInfo.birthdate = formData.birthdate;
+          userInfo.lastUpdated = new Date().toISOString();
+          localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
+          console.log("✅ Đã cập nhật thông tin user:", userInfo);
+          return true;
+        } catch (error) {
+          console.error("❌ Lỗi khi cập nhật thông tin user:", error);
+          return false;
+        }
+      }
+
+      function showEditSuccessNotification() {
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+          position: fixed;
+          top: 120px;
+          right: 20px;
+          background: linear-gradient(135deg, #28a745, #20c997);
+          color: white;
+          padding: 15px 20px;
+          border-radius: 8px;
+          z-index: 10000;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease;
+        `;
+        notification.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-check-circle"></i>
+            <span>Cập nhật thông tin thành công!</span>
+          </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.animation = "slideOut 0.3s ease";
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, 3000);
+      }
+
+      // ==================== XỬ LÝ SỰ KIỆN FORM ====================
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Xử lý submit form chỉnh sửa
+        const editInfoForm = document.getElementById("editInfoForm");
+        if (editInfoForm) {
+          editInfoForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            if (validateEditForm()) {
+              const formData = {
+                fullname: document.getElementById("editFullname").value.trim(),
+                phone: document.getElementById("editPhone").value.trim(),
+                email: document.getElementById("editEmail").value.trim(),
+                birthdate: document.getElementById("editBirthdate").value,
+              };
+
+              if (saveUserInfoUpdates(formData)) {
+                // Hiển thị thông báo thành công trong modal
+                document.getElementById("editSuccessMessage").style.display =
+                  "flex";
+
+                // Cập nhật UI
+                updateLoginUI();
+                updateAccountInfoPanel();
+
+                // Đóng modal sau 1.5 giây
+                setTimeout(() => {
+                  closeEditInfoModal();
+                  // Mở lại modal thông tin để xem thay đổi
+                  setTimeout(() => {
+                    openAccountInfoModal();
+                  }, 500);
+                }, 1500);
+              }
+            }
+          });
+        }
+
+        // Kiểm tra độ mạnh mật khẩu
+        const newPasswordInput = document.getElementById("newPassword");
+        const strengthFill = document.getElementById("strengthFill");
+
+        if (newPasswordInput && strengthFill) {
+          newPasswordInput.addEventListener("input", function () {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 6) strength += 1;
+            if (password.match(/[a-z]/)) strength += 1;
+            if (password.match(/[A-Z]/)) strength += 1;
+            if (password.match(/[0-9]/)) strength += 1;
+            if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+
+            let width = 0;
+            let colorClass = "strength-weak";
+
+            if (strength <= 2) {
+              width = 33;
+              colorClass = "strength-weak";
+            } else if (strength <= 4) {
+              width = 66;
+              colorClass = "strength-medium";
+            } else {
+              width = 100;
+              colorClass = "strength-strong";
+            }
+
+            strengthFill.style.width = width + "%";
+            strengthFill.className = "strength-fill " + colorClass;
+          });
+        }
+
+        // Xử lý submit form đổi mật khẩu
+        const changePasswordForm =
+          document.getElementById("changePasswordForm");
+        if (changePasswordForm) {
+          changePasswordForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            resetPasswordErrors();
+
+            let isValid = true;
+
+            // Kiểm tra mật khẩu hiện tại
+            const currentPassword =
+              document.getElementById("currentPassword").value;
+            if (!currentPassword) {
+              showPasswordError(
+                "currentPasswordError",
+                "Vui lòng nhập mật khẩu hiện tại"
+              );
+              isValid = false;
+            }
+
+            // Kiểm tra mật khẩu mới
+            const newPassword = document.getElementById("newPassword").value;
+            if (!newPassword) {
+              showPasswordError(
+                "newPasswordError",
+                "Vui lòng nhập mật khẩu mới"
+              );
+              isValid = false;
+            } else if (newPassword.length < 6 || !newPassword.match(/[0-9]/)) {
+              showPasswordError(
+                "newPasswordError",
+                "Mật khẩu phải có ít nhất 6 ký tự và 1 chữ số"
+              );
+              isValid = false;
+            }
+
+            // Kiểm tra xác nhận mật khẩu
+            const confirmPassword =
+              document.getElementById("confirmPassword").value;
+            if (!confirmPassword) {
+              showPasswordError(
+                "confirmPasswordError",
+                "Vui lòng xác nhận mật khẩu mới"
+              );
+              isValid = false;
+            } else if (newPassword !== confirmPassword) {
+              showPasswordError(
+                "confirmPasswordError",
+                "Mật khẩu xác nhận không khớp"
+              );
+              isValid = false;
+            }
+
+            if (isValid) {
+              saveNewPassword(newPassword);
+            }
+          });
+        }
+
+        function saveNewPassword(newPassword) {
+          const userData = JSON.parse(localStorage.getItem("currentUser"));
+
+          if (userData) {
+            // Cập nhật mật khẩu
+            userData.password = newPassword;
+            localStorage.setItem("currentUser", JSON.stringify(userData));
+
+            // Lưu thông tin user chi tiết
+            const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+            userInfo.password = newPassword;
+            userInfo.lastPasswordChange = new Date().toISOString();
+            localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
+            // Hiển thị thông báo thành công
+            document.getElementById("passwordSuccessMessage").style.display =
+              "flex";
+            document.getElementById("changePasswordForm").reset();
+            document.getElementById("strengthFill").style.width = "0%";
+
+            // Ẩn thông báo sau 3 giây
+            setTimeout(() => {
+              document.getElementById("passwordSuccessMessage").style.display =
+                "none";
+              closeChangePasswordModal();
+            }, 2000);
+
+            console.log("✅ Đã cập nhật mật khẩu mới cho user");
+          }
+        }
+
+        // Đóng modal khi click ra ngoài
+        window.addEventListener("click", function (e) {
+          const accountInfoModal = document.getElementById("accountInfoModal");
+          const changePasswordModal = document.getElementById(
+            "changePasswordModal"
+          );
+          const editInfoModal = document.getElementById("editInfoModal");
+
+          if (e.target === accountInfoModal) {
+            closeAccountInfoModal();
+          }
+          if (e.target === changePasswordModal) {
+            closeChangePasswordModal();
+          }
+          if (e.target === editInfoModal) {
+            closeEditInfoModal();
+          }
+        });
+      });
+
+      // ==================== CẬP NHẬT BẢNG THÔNG TIN ====================
+
+      function updateAccountInfoPanel() {
+        const userData = JSON.parse(localStorage.getItem("currentUser"));
+        const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+
+        if (userData) {
+          // Cập nhật bảng thông tin tài khoản
+          document.getElementById("accountName").textContent =
+            userData.fullname || "Tên tài khoản";
+          document.getElementById("accountEmail").textContent =
+            userData.email || "email@example.com";
+
+          // Cập nhật avatar với chữ cái đầu
+          const firstLetter = (userData.fullname || "U")
+            .charAt(0)
+            .toUpperCase();
+          document.getElementById("accountAvatar").textContent = firstLetter;
+
+          // Cập nhật user info trong header
+          const userNameElement = document.getElementById("userName");
+          if (userNameElement) {
+            userNameElement.textContent = userData.fullname || userData.phone;
+          }
+        }
+      }
+
+      // ==================== CẬP NHẬT SỰ KIỆN CLICK ====================
+
+      // Thêm sự kiện click cho các nút trong bảng thông tin
+      document.addEventListener("DOMContentLoaded", function () {
+        const accountInfoBtn = document.getElementById("accountInfoBtn");
+        const editInfoBtn = document.getElementById("editInfoBtn");
+        const changePasswordBtn = document.getElementById("changePasswordBtn");
+
+        if (accountInfoBtn) {
+          accountInfoBtn.addEventListener("click", function () {
+            openAccountInfoModal();
+          });
+        }
+
+        if (editInfoBtn) {
+          editInfoBtn.addEventListener("click", function () {
+            openEditInfoModal();
+          });
+        }
+
+        if (changePasswordBtn) {
+          changePasswordBtn.addEventListener("click", function () {
+            openChangePasswordModal();
+          });
+        }
+
+        // Xử lý click vào icon người dùng để hiển thị bảng thông tin
+        const userIconWrapper = document.getElementById("user-icon-wrapper");
+        const accountInfoPanel = document.getElementById("accountInfoPanel");
+
+        if (userIconWrapper) {
+          userIconWrapper.addEventListener("click", function (e) {
+            e.stopPropagation();
+            accountInfoPanel.classList.toggle("show");
+          });
+        }
+
+        // Đóng bảng thông tin khi click ra ngoài
+        document.addEventListener("click", function (e) {
+          if (
+            !accountInfoPanel.contains(e.target) &&
+            !userIconWrapper.contains(e.target)
+          ) {
+            accountInfoPanel.classList.remove("show");
+          }
+        });
+      });
+
+      // ==================== XỬ LÝ DỮ LIỆU ĐĂNG KÝ TỪ TRANG USER ====================
+
+      // Hàm để lưu thông tin chi tiết từ đăng ký
+      function saveUserRegistrationData(formData) {
+        const userInfo = {
+          fullname: formData.fullname,
+          phone: formData.phone,
+          email: formData.email,
+          birthdate: formData.birthdate,
+          password: formData.password,
+          joinDate: new Date().toISOString(),
+          memberLevel: "Vàng",
+          points: 1250,
+        };
+
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        console.log("💾 Đã lưu thông tin đăng ký user:", userInfo);
+      }
+
+      // Kiểm tra nếu có dữ liệu đăng ký mới từ trang user
+      function checkForNewRegistration() {
+        const registrationData = JSON.parse(
+          localStorage.getItem("newRegistration")
+        );
+        if (registrationData) {
+          saveUserRegistrationData(registrationData);
+          localStorage.removeItem("newRegistration");
+          console.log("🔄 Đã xử lý dữ liệu đăng ký mới");
+        }
+      }
+
+      // Chạy kiểm tra khi trang tải
+      checkForNewRegistration();
     </script>
+  <script src="js/data.js"></script>
+  <script src="js/product-render.js"></script>
+
+  <script src="js/product.js"></script>
+  <script src="js/product-details.js"></script>
+  <script src="js/main.js"></script>
   </body>
 </html>

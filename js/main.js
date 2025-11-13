@@ -79,48 +79,173 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function renderProductCard(product) {
     return `
-      <div class="product-card">
-        <img src="${product.image}" alt="${product.alt}">
+      <div class="product-card" data-id="${product.id}">
+        <img src="${product.image}" alt="${product.name}">
         <div class="product-name">${product.name}</div>
-        <div class="product-price">${product.price}</div>
-        <div class="product-oldprice">${product.oldPrice}</div>
+        <div class="product-price">${formatPrice(product.price)}</div>
+        <div class="product-oldprice">${formatPrice(product.oldPrice)}</div>
+        <button class="compare-btn" type="button">So sánh</button>
       </div>
     `;
   }
-  function performSearch() {
-    const query = searchInput.value.toLowerCase().trim();
-    hienTrang("search");
-
-    searchResultsContainer.innerHTML = "";
-    noResultsMessage.style.display = "none";
-
-    if (query.length === 0) {
-      noResultsMessage.textContent = "Vui lòng nhập từ khóa để tìm kiếm.";
-      noResultsMessage.style.display = "block";
-      return;
-    }
-
-    const filteredProducts = products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(query) ||
-        product.alt.toLowerCase().includes(query)
-    );
-
-    if (filteredProducts.length > 0) {
-      filteredProducts.forEach((product) => {
-        searchResultsContainer.insertAdjacentHTML(
-          "beforeend",
-          renderProductCard(product)
-        );
+  
+  
+  function formatPrice(price) {
+    if (!price) return "0 ₫";
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  }
+  function renderPaginatedProducts(containerId, products, itemsPerPage = 12) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+  
+    // Xóa nội dung cũ
+    container.innerHTML = "";
+  
+    // Tạo vùng chứa danh sách sản phẩm + pagination
+    const productContainer = document.createElement("div");
+    productContainer.className = "product-list";
+    container.appendChild(productContainer);
+  
+    const paginationContainer = document.createElement("div");
+    paginationContainer.className = "pagination";
+    container.appendChild(paginationContainer);
+  
+    let currentPage = 1;
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+  
+    function renderPage(page) {
+      productContainer.innerHTML = "";
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const visibleProducts = products.slice(start, end);
+  
+      visibleProducts.forEach((p) => {
+        productContainer.insertAdjacentHTML("beforeend", renderProductCard(p));
       });
-    } else {
-      noResultsMessage.textContent = `Không tìm thấy sản phẩm nào cho từ khóa: "${searchInput.value}"`;
-      noResultsMessage.style.display = "block";
+  
+      // Gắn lại sự kiện xem chi tiết
+      if (typeof attachProductDetailEvents === "function") {
+        attachProductDetailEvents();
+      }
+  
+      renderPagination();
     }
+  
+    function renderPagination() {
+      paginationContainer.innerHTML = "";
+  
+      const prevBtn = document.createElement("button");
+      prevBtn.textContent = "« Trước";
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage(currentPage);
+        }
+      };
+      paginationContainer.appendChild(prevBtn);
+  
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.textContent = i;
+        if (i === currentPage) pageBtn.classList.add("active");
+        pageBtn.onclick = () => {
+          currentPage = i;
+          renderPage(currentPage);
+        };
+        paginationContainer.appendChild(pageBtn);
+      }
+  
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Sau »";
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderPage(currentPage);
+        }
+      };
+      paginationContainer.appendChild(nextBtn);
+    }
+  
+    // Hiển thị trang đầu tiên
+    renderPage(1);
+  }
+  // =================== HIỂN THỊ SẢN PHẨM CHÍNH CÓ PHÂN TRANG ===================
+
+// Xu hướng 2025
+const xuhuongProducts = window.getProducts({ category: "xuhuong" });
+renderPaginatedProducts("xuhuong-products", xuhuongProducts, 8);
+
+// Đồng hồ Nam
+const namProducts = window.getProducts({ category: "nam" });
+renderPaginatedProducts("nam-products", namProducts, 8);
+
+// Đồng hồ Nữ
+const nuProducts = window.getProducts({ category: "nu" });
+renderPaginatedProducts("nu-products", nuProducts, 8);
+
+// =================== HOT SALE (HIỂN THỊ TOÀN BỘ, KHÔNG PHÂN TRANG) ===================
+const hotProducts = window.getProducts({ category: "hot" });
+const hotContainer = document.getElementById("hotsale-products");
+
+if (hotContainer && hotProducts.length > 0) {
+  hotContainer.innerHTML = hotProducts
+    .map(
+      (p) => `
+      <div class="product-card" data-id="${p.id}">
+        <img src="${p.image}" alt="${p.alt || p.name}">
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">${formatPrice(p.price)}</div>
+        <div class="product-oldprice">${formatPrice(p.oldPrice)}</div>
+        <button class="compare-btn" type="button">So sánh</button>
+      </div>
+    `
+    )
+    .join("");
+
+  // Gắn lại sự kiện mở modal chi tiết cho sản phẩm Hot Sale
+  if (typeof attachProductDetailEvents === "function") {
+    attachProductDetailEvents();
+  }
+}
+
+
+function performSearch() {
+  const query = searchInput.value.toLowerCase().trim();
+  hienTrang("search");
+
+  searchResultsContainer.innerHTML = "";
+  noResultsMessage.style.display = "none";
+
+  if (query.length === 0) {
+    noResultsMessage.textContent = "Vui lòng nhập từ khóa để tìm kiếm.";
+    noResultsMessage.style.display = "block";
+    return;
   }
 
-  searchButton.addEventListener("click", performSearch);
+  const filteredProducts = window.PRODUCTS.filter(
+    (product) =>
+      product.name.toLowerCase().includes(query) ||
+      (product.alt && product.alt.toLowerCase().includes(query))
+  );
 
+  if (filteredProducts.length > 0) {
+    // ✅ Gọi hàm phân trang
+    renderPaginatedProducts("search-results-container", filteredProducts, 12);
+  } else {
+    noResultsMessage.textContent = `Không tìm thấy sản phẩm nào cho từ khóa: "${searchInput.value}"`;
+    noResultsMessage.style.display = "block";
+  }
+}
+
+  
+  
+  searchButton.addEventListener("click", performSearch);
+  
   searchInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       performSearch();
@@ -978,41 +1103,51 @@ function attachProductDetailEvents() {
   const specsTable = modal.querySelector("#specsTable");
 
   document.querySelectorAll(".product-card").forEach((card) => {
-    // Nếu sự kiện đã gắn rồi thì bỏ qua
-    if (card.dataset.modalBound === "true") return;
 
-    card.dataset.modalBound = "true"; // tránh gắn trùng
+    if (card.dataset.modalBound === "true") return;
+    card.dataset.modalBound = "true";
+
     card.addEventListener("click", (e) => {
+
+      // Chặn khi click vào nút khác
       if (
         e.target.classList.contains("compare-btn") ||
         e.target.classList.contains("add-to-cart-btn")
-      )
+      ) return;
+
+      // Lấy ID
+      const productId = card.getAttribute("data-id");
+      const product = window.getProductById(productId);
+
+      if (!product) {
+        console.error("Không tìm thấy sản phẩm ID:", productId);
         return;
+      }
 
-      const name = card.querySelector(".product-name").textContent.trim();
-      const image = card.querySelector("img").src;
-      const price = card.querySelector(".product-price").textContent.trim();
-      const oldPrice = card
-        .querySelector(".product-oldprice")
-        .textContent.trim();
+      // Hiển thị hình ảnh
+      modal.querySelector("#modalProductImage").src = product.image;
 
-      const brand = detectBrand(name);
-      const specs = getSpecsByBrand(brand);
+      // Tên & giá
+      modal.querySelector("#modalProductName").textContent = product.name;
+      modal.querySelector("#modalCurrentPrice").textContent = formatPrice(product.price);
+      modal.querySelector("#modalOldPrice").textContent = formatPrice(product.oldPrice);
 
-      modal.querySelector("#modalProductImage").src = image;
-      modal.querySelector("#modalProductName").textContent = name;
-      modal.querySelector("#modalCurrentPrice").textContent = price;
-      modal.querySelector("#modalOldPrice").textContent = oldPrice;
+      // ⭐ Thêm mô tả
+      modal.querySelector("#modalDescription").textContent =
+        product.description || "Đang cập nhật mô tả sản phẩm.";
 
-      specsTable.innerHTML = Object.entries(specs)
-        .map(([key, val]) => `<tr><td>${key}</td><td>${val}</td></tr>`)
+      // Thông số sản phẩm
+      specsTable.innerHTML = Object.entries(product.specs || {})
+        .map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`)
         .join("");
 
+      // Hiện modal
       modal.style.display = "block";
       document.body.style.overflow = "hidden";
     });
   });
 
+  // Đóng modal
   closeBtn.addEventListener("click", closeModal);
   modal.addEventListener("click", (e) => {
     if (e.target === modal) closeModal();
@@ -1022,80 +1157,8 @@ function attachProductDetailEvents() {
     modal.style.display = "none";
     document.body.style.overflow = "auto";
   }
-
-  function detectBrand(name) {
-    const brands = [
-      "Casio",
-      "Tissot",
-      "Seiko",
-      "Citizen",
-      "Orient",
-      "Olym Pianus",
-      "Bonest Gatti",
-      "Hanboro",
-      "Movado",
-      "I&W Carnival",
-      "Carnival",
-    ];
-    const found = brands.find((b) =>
-      name.toLowerCase().includes(b.toLowerCase())
-    );
-    return found || "Khác";
-  }
-
-  function getSpecsByBrand(brand) {
-    const specs = {
-      Casio: {
-        "Thương hiệu": "Casio",
-        "Xuất xứ": "Nhật Bản",
-        "Loại máy": "Quartz (Pin)",
-        "Chống nước": "5ATM",
-        "Chất liệu dây": "Da / Thép không gỉ",
-        "Chất liệu kính": "Kính khoáng",
-      },
-      Tissot: {
-        "Thương hiệu": "Tissot",
-        "Xuất xứ": "Thụy Sĩ",
-        "Loại máy": "Automatic",
-        "Chống nước": "10ATM",
-        "Chất liệu dây": "Thép không gỉ",
-        "Chất liệu kính": "Sapphire",
-      },
-      Seiko: {
-        "Thương hiệu": "Seiko",
-        "Xuất xứ": "Nhật Bản",
-        "Loại máy": "Automatic",
-        "Chống nước": "10ATM",
-        "Chất liệu kính": "Hardlex",
-      },
-      Orient: {
-        "Thương hiệu": "Orient",
-        "Xuất xứ": "Nhật Bản",
-        "Loại máy": "Automatic",
-        "Chống nước": "5ATM",
-        "Chất liệu kính": "Kính khoáng",
-      },
-      "Bonest Gatti": {
-        "Thương hiệu": "Bonest Gatti",
-        "Xuất xứ": "Đức",
-        "Loại máy": "Cơ tự động",
-        "Chống nước": "5ATM",
-      },
-      "Olym Pianus": {
-        "Thương hiệu": "Olym Pianus",
-        "Xuất xứ": "Nhật Bản",
-        "Loại máy": "Automatic",
-        "Chống nước": "5ATM",
-      },
-      Khác: {
-        "Thương hiệu": "Đang cập nhật",
-        "Xuất xứ": "Đang cập nhật",
-        "Loại máy": "Đang cập nhật",
-      },
-    };
-    return specs[brand] || specs["Khác"];
-  }
 }
+
 
 // Gọi khi trang tải xong
 document.addEventListener("DOMContentLoaded", attachProductDetailEvents);

@@ -278,7 +278,7 @@ hotsale-product {
   width: 50%;
   text-align: center;
   padding-bottom: 20px;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .banner-hotsale {
@@ -1528,4 +1528,47 @@ button {
   align-items: center;
   margin: 15px auto;
 }
-/* END  */
+
+
+
+/* ======== PHÂN TRANG ======== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;          /* phải có */
+  margin-top: 25px;
+  margin-bottom: 40px;
+
+  position: static !important;   /* QUAN TRỌNG: ép đứng yên */
+}
+
+
+.pagination button {
+  background-color: var(--color-one);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pagination button.active {
+  background-color: #ff7b00;
+  font-weight: bold;
+}
+
+.pagination button:hover {
+  background-color: #e56a00;
+}
+
+#xuhuong-products,
+#nam-products,
+#nu-products,
+#search-results-container {
+  display: block !important;
+}
+
+/* ======== End PHÂN TRANG ======== */

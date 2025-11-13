@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | WatchStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="../css/admin.css">
 </head>
 
 <body>
@@ -132,8 +132,10 @@
                     <table id="productTable">
                         <thead>
                             <tr>
+                                <th>Hình</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Giá</th>
+                                <th>Thương hiệu</th>
                                 <th>Danh mục</th>
                                 <th>Thao tác</th>
                             </tr>
@@ -142,29 +144,57 @@
                     </table>
                     <div class="actions"><button><i class="fas fa-plus"></i> Thêm Sản phẩm mới</button></div>
                     <form id="productForm" style="display:none; margin-top: 20px;">
-                        <h3> thêm tên sản phẩm</h3>
-                        <label>tên sản phẩm</label>
-                        <input type="text" id="productName" required>
 
+                        <label>Tên sản phẩm</label>
+                        <input type="text" id="productName" required>
+                    
                         <label>Giá sản phẩm</label>
                         <input type="number" id="productValue" required>
-
+                    
+                        <label>Thương hiệu</label>
+                        <input type="text" id="productBrand" required placeholder="VD: Tissot, Casio, Orient">
+                    
                         <label>Danh mục sản phẩm</label>
-                        <input type="text" id="productCate" required>
-
+                        <select id="productCate" required>
+                            <option value="">--chọn danh mục--</option>
+                            <option value="nam">Nam</option>
+                            <option value="nu">Nữ</option>
+                            <option value="xuhuong">Xu hướng 2025</option>
+                            <option value="hot">Hot Sale</option>
+                        </select>
+                    
                         <label>Ảnh sản phẩm</label>
                         <input type="file" id="productImage" accept="image/*">
                         <img id="previewImage" src="" alt="xem trước ảnh" style="max-width:120px; display:none; margin-top:10px; border-radius:8px;">
-
+                    
                         <button type="submit">Lưu sản phẩm</button>
                     </form>
+                    
+                    
                    
                 </div>
             </section>
             <section id="categories" class="data-section" style="display: none;">
                 <div class="data-table">
                     <h2>Quản lý Danh mục</h2>
-                    <p>Chức năng thêm/sửa/xóa danh mục...</p>
+                   <table id="Cate-table">
+                        <thead>
+                            <tr>
+                                <th>Tên danh mục</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="CateTableBody"></tbody>
+                   </table>
+
+                   <div class="actions">
+                        <button id="addCateBtn"><i class="fas fa-plus"></i>Tạo danh mục mới</button>
+                   </div>
+                   <form id="CategoryForm" style="display:none; margin-top:20px;">
+                        <label>Tên danh mục</label>
+                        <input type="text" id="categoryName" required>
+                        <button type="submit">Lưu danh mục</button>
+                   </form>
                 </div>
             </section>
             <section id="orders" class="data-section" style="display: none;">
@@ -193,11 +223,24 @@
             </section>
         </div>
     </div>
-
+    <script src="../js/data.js"></script>
     <script>
         // =======================================================
         // PHẦN JAVASCRIPT (auth.js đã gộp vào)
         // =======================================================
+        // --- Hàm loại bỏ dấu và tạo slug đồng nhất ---
+function createSlug(str) {
+  return str
+    .normalize("NFD")              // tách ký tự có dấu
+    .replace(/[\u0300-\u036f]/g, "") // xóa dấu
+    .toLowerCase()
+    .replace(/\s+/g, '')           // bỏ khoảng trắng
+    .trim();
+}
+
+        // === ĐẢM BẢO DANH MỤC MẶC ĐỊNH CÓ TRONG LOCALSTORAGE ===
+   
+    
 
         const LOGIN_USERNAME = "admin";
         const LOGIN_PASSWORD = "123"; // Mật khẩu mẫu
@@ -302,6 +345,31 @@
         
 
         //bắt đầu đoạn code thêm/sửa/xóa
+        // ====================== ĐỒNG BỘ SẢN PHẨM TỪ data.js VÀO ADMIN ======================
+(function syncProductsFromDataJS() {
+    // Nếu chưa có sản phẩm trong localStorage → copy từ data.js
+    let stored = JSON.parse(localStorage.getItem("products"));
+
+    if (!stored || stored.length === 0) {
+        console.log("⏳ Import sản phẩm từ data.js vào Admin...");
+        
+        // Chuyển PRODUCTS từ data.js sang localStorage
+        const imported = window.PRODUCTS.map(p => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            brand: p.brand,
+            category: p.category,
+            image: p.image,
+            sku: p.sku,
+            description: p.description,
+            specs: p.specs
+        }));
+
+        localStorage.setItem("products", JSON.stringify(imported));
+    }
+})();
+
         const productForm = document.getElementById("productForm");
         const productTablebody = document.getElementById("productTablebody");
         const addProductBtn = document.querySelector(".actions button");
@@ -309,7 +377,12 @@
         const productImage=document.getElementById("productImage");
 
         //lưu danh sách sản phẩm
-        let products = JSON.parse(localStorage.getItem("products")) || [];
+        let products = JSON.parse(localStorage.getItem("products"));
+            if (!products || !Array.isArray(products) || products.length === 0) {
+                products = window.PRODUCTS; 
+                localStorage.setItem("products", JSON.stringify(products));
+            }
+
         let editIndex=-1;
 
         //Hiển thị hình ảnh xem trước khi chọn file
@@ -329,69 +402,76 @@
         })
 
         //hàm hiển thị sản phẩm trong bảng
-        function productRender() 
-        {
-            productTablebody.innerHTML = "";
-            products.forEach((p, index) => {
-                const row = document.createElement("tr");
-                row.innerHTML =
-                `
-                <td>
-                    ${p.image
-                    ?`<img src="${p.image}" alt="Ảnh sản phẩm" style="width:60px; height:60px; object-fit:cover; border-radius:8px">`
-                    :`<span style="color:#888;">(Chưa có ảnh)</span>`  }
-                </td>
-                <td>${p.name}</td>
-                <td>${p.price.toLocaleString()}₫</td>
-                <td>${p.category}</td>
-                <td>
-                    <button class="edit-btn" data-index="${index}"><i class ="fas fa-pencil"></i></button>
-                    <button class="delete-btn" data-index="${index}"><i class="fas fa-trash"></i></button>
-                </td>
-                `;
-                productTablebody.appendChild(row);
-            });
-             //xóa sản phẩm
-            document.querySelectorAll(".delete-btn").forEach(btn => 
-            {
-                btn.addEventListener("click", function() 
-                {
-                    const i = this.getAttribute("data-index");
-                    if(confirm("bạn xác nhận muốn xóa sản phẩm này?"))
-                    {
-                        products.splice(i, 1);
-                        localStorage.setItem("products", JSON.stringify(products));
-                        productRender();
-                    }
-                });
-            });
-            //Sửa sản phẩm
-            document.querySelectorAll(".edit-btn"). forEach(btn=>
-            {
-                btn.addEventListener("click", function()
-                {
-                    editIndex=this.getAttribute("data-index");
-                    const product=products[editIndex];
+        function productRender() {
+    productTablebody.innerHTML = "";
 
-                    document.getElementById("productName").value=product.name;
-                    price=document.getElementById("productValue").value=product.price;
-                    category=document.getElementById("productCate").value=product.category;
+    products.forEach((p, index) => {
+        const row = document.createElement("tr");
 
-                    if(product.image)
-                    {
-                        previewImage.src=product.image;
-                        previewImage.style.display="block";
-                    }
-                    else
-                    {
-                        previewImage.style.display="none";
-                    }
+        row.innerHTML = `
+            <td>
+                <img src="${p.image}" 
+                    onerror="this.src='../image/no-image.png';"
 
-                    productForm.style.display="block";
-                });
-            });
+                     style="width:60px;height:60px;border-radius:8px;object-fit:cover;">
+            </td>
+
+            <td>${p.name}</td>
+            <td>${p.price.toLocaleString()}₫</td>
+            <td>${p.brand}</td>
+            <td>${p.category}</td>
+
+            <td>
+                <button class="edit-btn" data-index="${index}">
+                    <i class="fas fa-pencil"></i>
+                </button>
+                <button class="delete-btn" data-index="${index}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+
+        productTablebody.appendChild(row);
+    });
+
+    attachEditDeleteEvents();
+    
+    // XÓA SẢN PHẨM
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.onclick = () => {
+            const i = btn.dataset.index;
+            if (confirm("Bạn muốn xóa sản phẩm này?")) {
+                products.splice(i, 1);
+                localStorage.setItem("products", JSON.stringify(products));
+                productRender();
+            }
+        };
+    });
+
+    // CHỈNH SỬA
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.onclick = () => {
+            editIndex = btn.dataset.index;
+            const product = products[editIndex];
             
-        }
+            document.getElementById("productName").value = product.name;
+            document.getElementById("productValue").value = product.price;
+            document.getElementById("productBrand").value = product.brand;
+            document.getElementById("productCate").value = product.category;
+            
+            if (product.image) {
+                previewImage.src = product.image;
+                previewImage.style.display = "block";
+            } else {
+                previewImage.style.display = "none";
+            }
+            
+            productForm.style.display = "block";
+        };
+    });
+
+    
+}
          // Khi bấm "Thêm Sản phẩm mới"
          addProductBtn.addEventListener("click", () => 
         {
@@ -431,149 +511,184 @@
                 saveProduct(name, price, category, imageData);
             }
         });
-        function saveProduct(name, price, category, image)
+        function saveProduct(name, price, category, image) 
         {   
-            if (editIndex===-1) {products.push({name, price, category, image});}
-            else 
-            {
-                products[editIndex]={name, price, category, image};
-                editIndex=-1;
+            const selectedCategoryName = category.trim();
+            const categorySlug = createSlug(selectedCategoryName); // 👈 thêm dòng này
+
+            const productData = {
+    id: editIndex === -1 
+        ? "P" + (products.length + 1).toString().padStart(3, "0")
+        : products[editIndex].id,
+
+    name,
+    price,
+    category: selectedCategoryName,
+    brand: document.getElementById("productBrand").value,
+
+    image,
+    sku: "SKU" + Date.now(),
+    description: "Sản phẩm được thêm từ Admin Panel",
+    specs: {
+        size: "Đang cập nhật",
+        movement: "Đang cập nhật",
+        waterResistance: "Đang cập nhật"
+    }
+};
+
+
+
+            if (editIndex === -1) {
+                products.push(productData);
+            } else {
+                products[editIndex] = productData;
+                editIndex = -1;
             }
+
             localStorage.setItem("products", JSON.stringify(products));
             productRender();
             productForm.reset();
-            productForm.style.display="none"; 
-            previewImage.style.display="none"; 
-            productImage.value="";
+            productForm.style.display = "none"; 
+            previewImage.style.display = "none"; 
+            productImage.value = "";
         }
         productRender();
-     
+    // ==================== CODE PHẦN DANH MỤC ====================
+/* ============================================================
+      QUẢN LÝ DANH MỤC (PHIÊN BẢN ĐÚNG)
+============================================================ */
+
+// Danh mục chuẩn: { name, hidden }
+let categories = JSON.parse(localStorage.getItem("categories")) || [
+  { name: "xuhuong", hidden: false },
+  { name: "nam", hidden: false },
+  { name: "nu", hidden: false },
+  { name: "hot", hidden: false }
+];
+
+function saveCategories() {
+  localStorage.setItem("categories", JSON.stringify(categories));
+}
+
+const CateTableBody = document.getElementById("CateTableBody");
+const CategoryForm = document.getElementById("CategoryForm");
+const addCateBtn = document.getElementById("addCateBtn");
+const categoryNameInput = document.getElementById("categoryName");
+
+let editCategoryIndex = -1;
+
+function renderCategories() {
+  CateTableBody.innerHTML = "";
+
+  categories.forEach((cat, index) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>
+        ${cat.name}
+        ${cat.hidden ? `<span style="color:red;">(Ẩn)</span>` : ""}
+      </td>
+
+      <td>
+        <button class="edit-category" data-index="${index}">
+          <i class="fas fa-pencil"></i>
+        </button>
+
+        <button class="delete-category" data-index="${index}">
+          <i class="fas fa-trash"></i>
+        </button>
+
+        <button class="toggle-category" data-index="${index}">
+          ${cat.hidden ? "Hiện" : "Ẩn"}
+        </button>
+      </td>
+    `;
+
+    CateTableBody.appendChild(row);
+  });
+
+  attachCategoryEvents();
+  renderProductDropdown();
+}
+
+function attachCategoryEvents() {
+  document.querySelectorAll(".edit-category").forEach(btn => {
+    btn.onclick = () => {
+      editCategoryIndex = btn.dataset.index;
+      categoryNameInput.value = categories[editCategoryIndex].name;
+      CategoryForm.style.display = "block";
+    };
+  });
+
+  document.querySelectorAll(".delete-category").forEach(btn => {
+    btn.onclick = () => {
+      const i = btn.dataset.index;
+      if (!confirm("Xóa danh mục?")) return;
+
+      categories.splice(i, 1);
+      saveCategories();
+      renderCategories();
+    };
+  });
+
+  document.querySelectorAll(".toggle-category").forEach(btn => {
+    btn.onclick = () => {
+      const i = btn.dataset.index;
+      categories[i].hidden = !categories[i].hidden;
+      saveCategories();
+      renderCategories();
+    };
+  });
+}
+
+addCateBtn.onclick = () => {
+  CategoryForm.style.display =
+    CategoryForm.style.display === "none" ? "block" : "none";
+
+  editCategoryIndex = -1;
+  categoryNameInput.value = "";
+};
+
+CategoryForm.onsubmit = (e) => {
+  e.preventDefault();
+
+  const name = categoryNameInput.value.trim().toLowerCase();
+  if (!name) return;
+
+  if (editCategoryIndex === -1) {
+    categories.push({ name, hidden: false });
+  } else {
+    categories[editCategoryIndex].name = name;
+  }
+
+  saveCategories();
+  renderCategories();
+  CategoryForm.reset();
+  CategoryForm.style.display = "none";
+};
+
+// Đổ danh mục ra dropdown sản phẩm
+function renderProductDropdown() {
+  const productCate = document.getElementById("productCate");
+  if (!productCate) return;
+
+  productCate.innerHTML = `<option value="">--chọn danh mục--</option>`;
+
+  categories.forEach(c => {
+    if (!c.hidden) {  
+      productCate.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+    }
+  });
+}
+
+renderCategories();
+renderProductDropdown();
+
+
+
        
-
-
-
-        // =======================================================
-    // PHẦN JAVASCRIPT (Tiếp theo)
-    // =======================================================
-
-    // --- Dữ liệu mô phỏng Người dùng/Khách hàng ---
-    let users = JSON.parse(localStorage.getItem("users")) || [
-        { id: 101, username: "nguyenvana", email: "vana@gmail.com", status: "active", lastLogin: "29/10/2025" },
-        { id: 102, username: "tranthib", email: "thib@gmail.com", status: "inactive", lastLogin: "25/10/2025" },
-        { id: 103, username: "lehuongc", email: "huongc@gmail.com", status: "active", lastLogin: "30/10/2025" }
-    ];
-
-    const usersSection = document.getElementById('users');
-
-    // Thêm cấu trúc HTML cho phần Users (để hiển thị danh sách)
-    // Ta sẽ chèn bảng vào bên trong div.data-table của section#users
-    if (usersSection) {
-        usersSection.querySelector('.data-table').innerHTML = `
-            <h2>Quản lý Người dùng</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên đăng nhập</th>
-                        <th>Email</th>
-                        <th>Trạng thái</th>
-                        <th>Lần cuối ĐN</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody id="userTableBody">
-                </tbody>
-            </table>
-        `;
-    }
-
-    const userTableBody = document.getElementById('userTableBody');
-
-    // Hàm lưu dữ liệu users vào localStorage
-    function saveUsers() {
-        localStorage.setItem("users", JSON.stringify(users));
-    }
-
-    // Hàm hiển thị danh sách người dùng
-    function renderUsers() {
-        if (!userTableBody) return;
-
-        userTableBody.innerHTML = "";
-        users.forEach((user, index) => {
-            const row = document.createElement("tr");
-            const statusClass = user.status === 'active' ? 'status-delivered' : 'status-pending';
-            const statusText = user.status === 'active' ? 'Hoạt động' : 'Đã khóa';
-            const toggleActionText = user.status === 'active' ? 'Khóa' : 'Mở khóa';
-
-            row.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.username}</td>
-                <td>${user.email}</td>
-                <td><span class="${statusClass}">${statusText}</span></td>
-                <td>${user.lastLogin}</td>
-                <td class="action-links">
-                    <a href="#" class="reset-password-btn" data-index="${index}">Reset MK</a>
-                    <a href="#" class="toggle-status-btn" data-index="${index}">${toggleActionText}</a>
-                </td>
-            `;
-            userTableBody.appendChild(row);
-        });
-        
-        // Gắn sự kiện cho các nút
-        attachUserEventListeners();
-    }
-
-    // Hàm gán sự kiện thao tác
-    function attachUserEventListeners() {
-        // Reset Mật khẩu
-        document.querySelectorAll(".reset-password-btn").forEach(btn => {
-            btn.addEventListener("click", function(e) {
-                e.preventDefault();
-                const index = this.getAttribute("data-index");
-                const user = users[index];
-                if (confirm(`Xác nhận Reset mật khẩu cho người dùng "${user.username}"?`)) {
-                    // Logic Reset: Ở đây chỉ mô phỏng thông báo
-                    alert(`Mật khẩu của "${user.username}" đã được Reset thành mật khẩu mặc định (ví dụ: 123456).`);
-                }
-            });
-        });
-
-        // Khóa / Mở khóa tài khoản
-        document.querySelectorAll(".toggle-status-btn").forEach(btn => {
-            btn.addEventListener("click", function(e) {
-                e.preventDefault();
-                const index = this.getAttribute("data-index");
-                const user = users[index];
-                const newStatus = user.status === 'active' ? 'inactive' : 'active';
-                const action = newStatus === 'active' ? 'Mở khóa' : 'Khóa';
-
-                if (confirm(`Xác nhận ${action} tài khoản "${user.username}"?`)) {
-                    users[index].status = newStatus;
-                    saveUsers();
-                    renderUsers(); // Render lại bảng
-                    alert(`Tài khoản "${user.username}" đã được ${action.toLowerCase()} thành công.`);
-                }
-            });
-        });
-    }
-    
-    // Thêm sự kiện click cho sidebar link Quản lý Người dùng để render bảng
-    document.getElementById('users').addEventListener('click', renderUsers);
-    
-    // Gán sự kiện cho tất cả sidebar links để đảm bảo renderUsers chạy khi tab được chọn
-    sidebarLinks.forEach(link => {
-        if (link.getAttribute('href') === '#users') {
-            link.addEventListener('click', renderUsers);
-        }
-    });
-
-
-    // Gọi hàm renderUsers lần đầu nếu tab users đang được chọn mặc định
-    // (Trong trường hợp này không cần vì dashboard là mặc định, nhưng nên thêm cho đầy đủ)
-    if (window.location.hash === '#users') {
-        renderUsers();
-    }
     </script>
+    
 </body>
 
 </html>
