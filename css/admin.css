@@ -138,58 +138,88 @@
         display: flex; /* Thêm display: flex để sidebar và main-content nằm cạnh nhau */
     }
     
-    /* 1. SIDEBAR (Menu Điều hướng) */
-    .sidebar {
-        width: 250px;
-        background-color: var(--admin-sidebar-bg);
-        color: var(--admin-light-text);
-        padding: 20px 0;
-        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        position: sticky;
-        top: 0;
-        flex-shrink: 0;
-    }
-    
-    .sidebar h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: var(--admin-light-text);
-        font-size: 1.5em;
-        padding: 0 10px;
-    }
-    
-    .sidebar ul {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .sidebar ul li a {
-        display: flex;
-        align-items: center;
-        padding: 15px 20px;
-        text-decoration: none;
-        color: var(--admin-light-text);
-        border-left: 5px solid transparent;
-        transition: all 0.3s;
-    }
-    
-    .sidebar ul li a:hover, .sidebar ul li a.active {
-        background-color: #34495e;
-        border-left-color: var(--admin-primary-color);
-        font-weight: bold;
-    }
-    
-    .sidebar ul li a i {
-        margin-right: 10px;
-        font-size: 1.1em;
-    }
-    
-    /* 2. HEADER & MAIN CONTENT */
-    .main-content {
-        flex-grow: 1;
-        padding: 20px;
-    }
-    
+    /* =======================================================
+   SIDEBAR — THU GỌN + HOVER MỞ
+======================================================= */
+.sidebar {
+    width: 70px;
+    background: var(--admin-sidebar-bg);
+    color: var(--admin-light-text);
+    padding-top: 20px;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    height: 100vh;
+    overflow-y: auto;
+
+    transition: width 0.25s ease;
+    z-index: 1000;
+}
+
+.sidebar:hover { width: 250px; }
+
+.sidebar h2 {
+    text-align: center;
+    font-size: 1.4rem;
+    color: var(--admin-light-text);
+    margin-bottom: 25px;
+}
+
+/* Menu item */
+.sidebar ul { list-style: none; }
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    color: var(--admin-light-text);
+    border-left: 4px solid transparent;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.sidebar ul li a i {
+    font-size: 1.3rem;
+    width: 40px;
+    text-align: center;
+}
+
+/* Ẩn chữ khi ở chế độ thu gọn */
+.sidebar ul li a span {
+    opacity: 0;
+    visibility: hidden;
+    margin-left: -10px;
+    transition: 0.25s;
+}
+
+/* Khi hover sidebar → hiện chữ */
+.sidebar:hover ul li a span {
+    visibility: visible;
+    opacity: 1;
+    margin-left: 10px;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+    background: #34495e;
+    border-left-color: var(--admin-primary-color);
+}
+
+/* =======================================================
+   MAIN CONTENT
+======================================================= */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 70px;
+    transition: margin-left 0.25s ease;
+}
+
+.sidebar:hover ~ .main-content {
+    margin-left: 250px;
+}
+
     .admin-header {
         background-color: var(--admin-card-bg);
         padding: 15px 20px;
@@ -399,8 +429,435 @@
 }
 .edit-category-btn:hover { background-color: #e67e22; }
 
+/* =======================================================
+   TÙY CHỈNH CHO PHẦN QUẢN LÝ SẢN PHẨM VÀ DANH MỤC
+   - Làm rõ ràng các nút thao tác, bảng gọn hơn, form đẹp hơn
+   ======================================================= */
+
+/* Buttons chung trong bảng */
+.btn-small {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--admin-primary-color);
+    color: #fff;
+}
+.btn-primary:hover { background: #2b81c6; }
+
+.btn-danger {
+    background: #e74c3c;
+    color: #fff;
+}
+.btn-warning {
+    background: #f39c12;
+    color: #fff;
+}
+
+/* Bảng sản phẩm (product list) */
+#productTable tbody tr td img { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; }
+#productTable tbody tr:hover { background: #fafcff; }
+#productTable .edit-btn, #productTable .delete-btn {
+    margin-right: 6px;
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+#productTable .edit-btn i, #productTable .delete-btn i { color: #444; }
+#productTable .edit-btn:hover { background: #eef6ff; border-color: #cfe7ff; }
+#productTable .delete-btn:hover { background: #ffecec; border-color: #fecaca; }
+
+/* Form sản phẩm */
+#productForm { max-width: 760px; }
+#productForm input[type="file"] { padding: 6px; }
+
+/* Phần Danh mục */
+#Cate-table thead { background: linear-gradient(90deg, #f8fafc, #ffffff); }
+#Cate-table tbody tr td { vertical-align: middle; }
+.toggle-category {
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+.toggle-category[data-hidden="true"] { background: #95a5a6; color: #fff; }
+.toggle-category[data-hidden="false"] { background: #27ae60; color: #fff; }
+
+/* Hiệu ứng cho hàng category khi hover */
+#Cate-table tbody tr:hover { background: #fbfdff; }
+
+/* Selected products area (phiếu nhập) */
+#selectedProductsTable thead th { background: #f6f9fc; }
+#selectedProductsTable tbody tr td { vertical-align: middle; }
+#selectedProductsTable tbody tr td i.fa-trash { color: #fff; }
+
+/* Nút add-to-receipt */
+.add-to-receipt-btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; padding: 6px; }
+.add-to-receipt-btn:disabled { background: #ccc !important; cursor: default !important; }
+
+/* Responsive nhỏ */
+@media (max-width: 900px) {
+    .sidebar { width: 200px; }
+    .summary-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    #productForm { padding: 12px; }
+}
+
+/* Một vài tinh chỉnh nhỏ để đồng bộ giao diện */
+.data-table .actions { align-items: center; }
+.data-table .actions button i { margin-right: 8px; }
+
+
 .delete-category-btn {
     background-color: #e74c3c; /* Đỏ */
     color: white;
 }
 .delete-category-btn:hover { background-color: #c0392b; }
+.filter-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .filter-section > div {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .btn-primary {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            padding: 8px 16px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #ffc107;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-card p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        #ordersTable {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        #ordersTable thead {
+            background: #f8f9fa;
+        }
+
+        #ordersTable th,
+        #ordersTable td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #ordersTable th {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .order-row:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .status-pending {
+            background: #ffc107 !important;
+            color: black !important;
+        }
+
+        .status-confirmed {
+            background: #17a2b8 !important;
+        }
+
+        .status-shipping {
+            background: #007bff !important;
+        }
+
+        .status-completed {
+            background: #28a745 !important;
+        }
+
+        .status-cancelled {
+            background: #dc3545 !important;
+        }
+
+        .actions button {
+            padding: 6px 10px;
+            margin: 0 4px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-view-detail {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-view-detail:hover {
+            background: #138496;
+        }
+
+        .btn-update-status {
+            background: #ffc107;
+            color: black;
+        }
+
+        .btn-update-status:hover {
+            background: #e0a800;
+        }
+
+        .btn-cancel-order {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-cancel-order:hover {
+            background: #c82333;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-section {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-section h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .info-table {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .info-table tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-table td {
+            padding: 8px 0;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .items-table th,
+        .items-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .items-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .items-table img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 2px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .order-total-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .total-row.grand-total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d70018;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 20px auto;
+            border-radius: 8px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section > div {
+                grid-template-columns: 1fr !important;
+            }
+
+            .actions button {
+                display: block;
+                width: 100%;
+                margin: 4px 0;
+            }
+
+            .detail-header {
+                flex-direction: column;
+            }
+        }

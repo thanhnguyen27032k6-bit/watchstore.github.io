@@ -617,11 +617,41 @@ const PRODUCTS   = [
   
   // Expose globally
   window.PRODUCTS = PRODUCTS;
+  /**
+   * 
+   * @returns 
+   */
+  function getCurrentProduct(){
+    //lấy chuỗi product được lưu trữ trong localstorage
+    const storedProduct = localStorage.getItem("products");
+    if(storedProduct)
+    {
+      try{
+        //chuyển chuỗi localStorage thành mảng jvs
+        const parsed_products=JSON.parse(storedProduct)
+        
+        //kiểm tra tính hợp lệ của mảng
+        if(Array.isArray(parsed_products)&&parsed_products.length>0)
+        {
+          return parsed_products;
+        }
+      }
+      catch (e)
+      {
+        console.error("lỗi parse localStorage 'product':", e)
+      }
+    }
+    return PRODUCTS;
+  }
   
   // Helper functions (tuỳ ý sử dụng)
-  window.getProducts = function (filters = {}) {
+
+  //cập nhật hàm sao cho luôn lấy dữ liệu mới nhật được thêm vào
+  window.getProducts = function (filters = {}) {  
+    let currentProducts=getCurrentProduct();
+
     // filters có thể gồm: { category, brand, priceMin, priceMax, query }
-    let result = PRODUCTS.filter(p => {
+    let result = currentProducts.filter(p => {
       if (filters.category && p.category !== filters.category) return false;
       if (filters.brand && p.brand && p.brand.toLowerCase() !== filters.brand.toLowerCase()) return false;
       if (filters.priceMin && p.price < filters.priceMin) return false;
@@ -653,6 +683,27 @@ const PRODUCTS   = [
   };
   
   window.getProductById = function (id) {
-    return PRODUCTS.find(p => p.id === id) || null;
+    const products = getCurrentProduct(); // luôn lấy dữ liệu mới nhất
+    return products.find(p => p.id === id) || null;
+};
+
+  // Lấy danh mục từ localStorage (được thêm từ admin)
+  // Nếu chưa có, trả về danh mục mặc định
+  window.getCategories = function () {
+    let categories = JSON.parse(localStorage.getItem("categories"));
+    
+    if (!categories || !Array.isArray(categories) || categories.length === 0) {
+      // Danh mục mặc định
+      categories = [
+        { name: "xuhuong", hidden: false },
+        { name: "nam", hidden: false },
+        { name: "nu", hidden: false },
+        { name: "hot", hidden: false }
+      ];
+      localStorage.setItem("categories", JSON.stringify(categories));
+    }
+    
+    // Chỉ trả về danh mục không ẩn
+    return categories.filter(c => !c.hidden);
   };
   

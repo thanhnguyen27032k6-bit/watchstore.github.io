@@ -270,7 +270,11 @@
               <!-- Thêm vào phần header-icons trong header -->
               <div class="header-icons">
                 <!-- Thêm nút đăng nhập -->
-                 <div id="headerProfileContainer"></div>
+                <div class="icon-wrapper" id="login-icon-wrapper">
+                  <i class="fas fa-user"></i>
+                  <span class="login-text">Đăng nhập</span>
+                </div>
+
                 <div class="icon-wrapper" id="wishlist-icon">
                   <i class="far fa-heart"></i>
                   <div class="badge" id="wishlist-count">0</div>
@@ -705,18 +709,21 @@
             <!-- ⭐ Thêm mô tả sản phẩm -->
             <p id="modalDescription" class="product-description"></p>
     
+           
+    
+            <div class="btn-box">
+              <button class="btn-buy">MUA NGAY</button>
+              <button class="btn-cart">THÊM VÀO GIỎ</button>
+            </div>
+
+
             <div class="benefit-box">
-              <ul>
+              <ul >
                 <li>✅ 100% sản phẩm chính hãng</li>
                 <li>🔁 Đổi trả trong 3 ngày nếu lỗi</li>
                 <li>🚚 Miễn phí vận chuyển toàn quốc</li>
                 <li>⚡ Giao hàng hỏa tốc trong ngày</li>
               </ul>
-            </div>
-    
-            <div class="btn-box">
-              <button class="btn-buy">MUA NGAY</button>
-              <button class="btn-cart">THÊM VÀO GIỎ</button>
             </div>
           </div>
         </div>
@@ -2078,7 +2085,7 @@
         }
 
         // Xử lý click vào icon người dùng để hiển thị bảng thông tin
-        const userIconWrapper = document.getElementById("user-icon-wrapper");
+        const userIconWrapper = document.getElementById("login-icon-wrapper");
         const accountInfoPanel = document.getElementById("accountInfoPanel");
 
         if (userIconWrapper) {
@@ -2090,13 +2097,15 @@
 
         // Đóng bảng thông tin khi click ra ngoài
         document.addEventListener("click", function (e) {
-          if (
-            !accountInfoPanel.contains(e.target) &&
-            !userIconWrapper.contains(e.target)
-          ) {
-            accountInfoPanel.classList.remove("show");
-          }
-        });
+  if (!accountInfoPanel || !userIconWrapper) return;
+
+  if (
+    !accountInfoPanel.contains(e.target) &&
+    !userIconWrapper.contains(e.target)
+  ) {
+    accountInfoPanel.classList.remove("show");
+  }
+});
       });
 
       // ==================== XỬ LÝ DỮ LIỆU ĐĂNG KÝ TỪ TRANG USER ====================
@@ -2136,7 +2145,6 @@
   <script src="js/data.js"></script>
   <script src="js/product-render.js"></script>
 
-  <script src="js/product.js"></script>
   <script src="js/product-details.js"></script>
   <script src="js/main.js"></script>
   </body>

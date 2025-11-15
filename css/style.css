@@ -669,424 +669,478 @@ hotsale-product {
 .hidden {
   display: none !important;
 }
-/*=========================== Đăng nhập user ===========================*/
-
-
-
-        .login-page-wrapper {
-            width: 100%;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .login-container {
-            display: flex;
-            width: 100%;
-            background-color: white;
-        }
-
-
-        .login-form-area {
-            padding: 60px 50px;
-            width:50%;
-            border-right: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        .title-main {
-            font-size: 2.2em;
-            color: #ff6600;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .login-form input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1em;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 15px;
-            background-color: #f7a600; /* Màu cam */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-
-        .forgot-password {
-            display: block;
-            text-align: center;
-            color: #ff6600;
-            text-decoration: none;
-            font-size: 0.95em;
-            margin-bottom: 30px;
-        }
-
-        /* Social Login */
-        .social-login-section {
-            border-top: 1px solid #eee;
-            padding-top: 30px;
-            text-align: center;
-        }
-
-        .social-login-section p {
-            color: #555;
-            margin-bottom: 15px;
-        }
-
-        .google-login-button-mock {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 40px;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.1em;
-            color: #5f6368;
-            background-color: white;
-            font-weight: 500;
-            margin-bottom: 30px;
-        }
-
-        .google-icon {
-            width: 20px;
-            margin-right: 10px;
-        }
-
-        .btn-register-now {
-            color: #f7a600;
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 5px;
-        }
-
-        .benefits-area {
-            width: 50%;
-            background-color: #f8f8f8; 
-            padding: 60px 50px;
-            position: relative;
-        }
-
-        .header-logo {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header-logo .logo-image {
-            width: 40px; 
-            height: 40px;
-            margin-left: auto; 
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .header-logo p {
-            font-weight: bold;
-            font-size: 1.2em;
-            margin: 0;
-            text-align: right;
-        }
-
-        .benefits-title {
-            font-size: 1.8em;
-            font-weight: normal;
-            line-height: 1.3;
-            margin-bottom: 70px;
-            text-align: center;
-        }
-
-        .benefits-title .highlight {
-            color: #f7a600;
-            font-weight: bold;
-        }
-
-        .benefits-box {
-            background-color: #ededed; /* Màu xám nhạt hơn cho box */
-            padding: 25px;
-            border-radius: 8px;
-        }
-
-        .benefits-box ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .benefits-box li {
-            font-size: 1em;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .benefits-box li i {
-            margin-right: 8px;
-            font-style: normal;
-        }
-        #overlay {
-            position: fixed;      
-            top: 0;
-            left: 0;
-            width: 100vw;         
-            height: 100vh;      
-            background-color: white; 
-            color: black;
-            display: none;         
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;   
-        }
-
-        #overlay button {
-            margin-top: 20px;
-            padding: 10px 20px;
-        }
-        button{
-            background-color: white;
-            border: 0px;
-            font-size: 1em;
-            color: #ff6600;
-            cursor: pointer;
-        }
-
-        /*đăng ký*/
-        .register-container {
-        margin: 30px auto;
-        padding: 24px;
-        width: 90%;
-        }
-
-        .register-header {
-        text-align: center;
-        margin-bottom: 18px;
-        }
-
-        .register-header h1 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 700;
-        }
-
-        .register-header .register-brand {
-        margin-top: 8px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        }
-
-        .register-card {
-        border-radius: 10px;
-        padding: 28px;
-        border: 1px solid #eee;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.03);
-        }
-
-        .register-social {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 18px;
-        }
-
-        .register-btn-google {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border: 1px solid #e5e5e5;
-        padding: 10px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #fff;
-        }
-
-        .register-btn-google:hover {
-        background: #f5f5f5;
-        }
-
-        .register-divider {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin: 18px 0;
-        color: #777;
-        font-size: 14px;
-        }
-
-        .register-divider::before, .register-divider::after {
-        content: "";
-        flex: 1;
-        border-top: 1px solid #eee;
-        }
-
-        .register-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        }
-
-        .register-form-group {
-        display: flex;
-        flex-direction: column;
-        }
-
-        .register-form-group label {
-        font-size: 13px;
-        margin-bottom: 6px;
-        color: #333;
-        }
-
-        .register-form-group input {
-        padding: 10px 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        outline: none;
-        transition: border 0.15s;
-        }
-
-        .register-form-group input:focus {
-        border-color: #aaa;
-        }
-
-        .register-full {
-        grid-column: 1 / -1;
-        }
-
-        .register-note {
-        font-size: 12px;
-        color: #666;
-        margin-top: 6px;
-        }
-
-        .register-error {
-        color: #c0392b;
-        font-size: 12px;
-        margin-top: 6px;
-        display: none;
-        }
-
-        .register-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 22px;
-        gap: 12px;
-        }
-
-        .register-btn-back {
-        background: #fff;
-        border: 1px solid #ffd9b3;
-        padding: 12px 20px;
-        border-radius: 30px;
-        color: #ff8c33;
-        cursor: pointer;
-        }
-
-        .register-btn-submit {
-        background: #000;
-        color: #fff;
-        padding: 12px 24px;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        }
-
-        .register-btn-submit:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        }
-
-        @media (max-width: 900px) {
-          .register-grid { 
-            grid-template-columns: 1fr;
-            width: 100%;
-          }
-          .register-actions { 
-            flex-direction: column-reverse; 
-            align-items: stretch; 
-            width: 100%;
-          }
-          .login-container{
-            display: block;
-          }
-          .benefits-area{
-            width: 100%;
-          }
-          .header-logo{
-            display: none;
-          }
-          .login-form-area{
-            width: 100%;
-          }
-        }
-
-        /* Chỉnh sửa thông tin tài khoản */
-        .account-card{
-          width:calc(100% - 48px);
-          margin:48px auto;
-          background:white;
-          border-radius:14px;
-          box-shadow:0 12px 48px rgba(0,0,0,0.18);
-          padding:24px;
-          position:relative;
-        }
-        #accountEditBtn, #accountHomeBtn {
-            background-color: #ff6600;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        #accountEditAreaUI{
-          font-size: 24px;
-          width: 100%;
-        }
-        #accountEditFullname, #accountEditEmail, #accountEditPhone, #accountEditBirth {
-          width: 100%;
-          padding: 8px;
-          margin-bottom: 12px;
-          font-size: 1em;
-        }
-        #headerProfileContainer{
-          background-color: white;
-          padding: 5px;
-        }
-        /*end chỉnh sửa thông tin tài khoản*/
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Đăng nhập user  */
+
+/* Đăng nhập user  */
+
+.login-page-wrapper {
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-container {
+  display: flex;
+  width: 100%;
+  background-color: white;
+}
+
+.login-form-area {
+  padding: 60px 50px;
+  width: 50%;
+  border-right: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.title-main {
+  font-size: 2.2em;
+  color: #ff6600;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 15px;
+  background-color: #f7a600; /* Màu cam */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.forgot-password {
+  display: block;
+  text-align: center;
+  color: #ff6600;
+  text-decoration: none;
+  font-size: 0.95em;
+  margin-bottom: 30px;
+}
+
+/* Social Login */
+.social-login-section {
+  border-top: 1px solid #eee;
+  padding-top: 30px;
+  text-align: center;
+}
+
+.social-login-section p {
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.google-login-button-mock {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 40px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1em;
+  color: #5f6368;
+  background-color: white;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.google-icon {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.btn-register-now {
+  color: #f7a600;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.benefits-area {
+  width: 50%;
+  background-color: #f8f8f8;
+  padding: 60px 50px;
+  position: relative;
+}
+.right-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* phân bổ đều không gian */
+  height: 100%;
+}
+
+.benefit-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.benefit-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 31px;
+  width: 100%;
+}
+
+.benefit-box ul li {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  margin: 5px 0;
+}
+
+.header-logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header-logo .logo-image {
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.header-logo p {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 0;
+  text-align: right;
+}
+
+.benefits-title {
+  font-size: 1.8em;
+  font-weight: normal;
+  line-height: 1.3;
+  margin-bottom: 70px;
+  text-align: center;
+}
+
+.benefits-title .highlight {
+  color: #f7a600;
+  font-weight: bold;
+}
+
+.benefits-box {
+  background-color: #ededed; /* Màu xám nhạt hơn cho box */
+  padding: 25px;
+  border-radius: 8px;
+}
+
+.benefits-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits-box li {
+  font-size: 1em;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.benefits-box li i {
+  margin-right: 8px;
+  font-style: normal;
+}
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  color: black;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#overlay button {
+  margin-top: 20px;
+  padding: 10px 20px;
+}
+button {
+  background-color: white;
+  border: 0px;
+  font-size: 1em;
+  color: #ff6600;
+  cursor: pointer;
+}
+
+/*đăng ký*/
+.register-container {
+  margin: 30px auto;
+  padding: 24px;
+  width: 90%;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.register-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.register-header .register-brand {
+  margin-top: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.register-card {
+  border-radius: 10px;
+  padding: 28px;
+  border: 1px solid #eee;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+}
+
+.register-social {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.register-btn-google {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e5e5e5;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.register-btn-google:hover {
+  background: #f5f5f5;
+}
+
+.register-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.register-divider::before,
+.register-divider::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid #eee;
+}
+
+.register-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.register-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-form-group label {
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.register-form-group input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: border 0.15s;
+}
+
+.register-form-group input:focus {
+  border-color: #aaa;
+}
+
+.register-full {
+  grid-column: 1 / -1;
+}
+
+.register-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 6px;
+}
+
+.register-error {
+  color: #c0392b;
+  font-size: 12px;
+  margin-top: 6px;
+  display: none;
+}
+
+.register-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 22px;
+  gap: 12px;
+}
+
+.register-btn-back {
+  background: #fff;
+  border: 1px solid #ffd9b3;
+  padding: 12px 20px;
+  border-radius: 30px;
+  color: #ff8c33;
+  cursor: pointer;
+}
+
+.register-btn-submit {
+  background: #000;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+.register-btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .register-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  .register-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    width: 100%;
+  }
+  .login-container {
+    display: block;
+  }
+  .benefits-area {
+    width: 100%;
+  }
+  .header-logo {
+    display: none;
+  }
+  .login-form-area {
+    width: 100%;
+  }
+}
+/* profile box trong header */
+.profile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid #eee;
+  font-size: 14px;
+  float: right;
+}
+.profile-text {
+  color: #0056b3;
+  font-size: 1.2em;
+}
+.profile-edit,
+.profile-logout {
+  font-size: 1.2em;
+}
+/* nút link trong profile */
+.profile a,
+.profile button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+/* overlay/modal đơn giản */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 2000;
+}
+.modal {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  width: 320px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+}
+.modal label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.modal input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+/* actions */
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.modal-actions button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
 /*Nút so sánh*/
 
-
-.compare-btn{
+.compare-btn {
   float: right;
   color: #007bff;
 }
@@ -1098,7 +1152,7 @@ hotsale-product {
   right: 0;
   background: #fff;
   border-top: 2px solid #007bff;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
   display: flex;
   height: 150px;
@@ -1121,10 +1175,11 @@ hotsale-product {
 /* --- Popup so sánh --- */
 .compare-popup {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1139,7 +1194,7 @@ hotsale-product {
   padding: 25px;
   width: 75%;
   max-width: 800px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   animation: slideUp 0.3s ease;
 }
 
@@ -1151,7 +1206,8 @@ hotsale-product {
   margin-top: 15px;
   border: 2px solid #007bff; /* viền ngoài */
 }
-.compare-table th, .compare-table td {
+.compare-table th,
+.compare-table td {
   border: 1.5px solid #ddd; /* ✅ viền giữa các ô */
   padding: 10px;
   vertical-align: middle;
@@ -1184,32 +1240,27 @@ hotsale-product {
 
 /* --- Hiệu ứng nhỏ --- */
 @keyframes fadeIn {
-  from { opacity: 0; } 
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
-
 
 /*end so sánh*/
 
-/*quản lý tài khoản*/
-
-.user-controls { display:flex; gap:8px; margin-bottom:10px; }
-.account-table { width:100%; border-collapse:collapse; background:#fff; }
-.account-table th, .account-table td { padding:8px 10px; border-bottom:1px solid #eee; text-align:left; }
-.account-table thead { background:#f6f9fb; }
-.action-btn { margin-right:6px; padding:4px 8px; border-radius:4px; cursor:pointer; }
-.action-edit { border:1px solid #2b9bd7; background:transparent; }
-.action-del { border:1px solid #e57373; background:transparent; color:#e57373; }
-
-/*end quản lý tài khoản*/
-
-
-
- /*End  Đăng nhập user  */
+/*End  Đăng nhập user  */
 
 /*search*/
 .header-main .inner-search {
@@ -1550,4 +1601,224 @@ hotsale-product {
   display: block !important;
 }
 
-/* ======== End PHÂN TRANG ======== */
+/* ======== End PHÂN TRANG ======== *//* ==================== CSS HIỂN THỊ GIÁ SẢN PHẨM ====================
+   Thêm vào file css/style.css hoặc tạo file riêng */
+
+/* Container giá */
+.product-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 10px 0;
+  min-height: 50px; /* Đảm bảo không bị nhảy layout */
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Giá gốc (gạch ngang) */
+.price-original {
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+  font-weight: 400;
+  white-space: nowrap; /* Không xuống dòng */
+}
+
+/* Giá sau giảm (màu đỏ, đậm) */
+.price-sale {
+  font-size: 18px;
+  color: #e74c3c;
+  font-weight: 700;
+  white-space: nowrap; /* Không xuống dòng */
+}
+
+/* Nếu không có giảm giá thì giá hiển thị bình thường */
+.product-price .price-sale:only-child {
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Xử lý khi giá quá dài */
+.product-price {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Thẻ giảm giá góc trên bên phải */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  z-index: 2;
+  animation: pulse 2s infinite;
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Product item container */
+.product-item {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Product info */
+.product-info {
+  padding: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 40px;
+}
+
+.product-brand {
+  font-size: 13px;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Product actions */
+.product-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 15px 15px;
+  margin-top: auto;
+}
+
+.btn-detail,
+.compare-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-detail {
+  background: #3498db;
+  color: white;
+}
+
+.btn-detail:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+.compare-btn {
+  background: #f39c12;
+  color: white;
+}
+
+.compare-btn:hover {
+  background: #e67e22;
+  transform: translateY(-2px);
+}
+
+/* Product image */
+.product-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-item:hover .product-image img {
+  transform: scale(1.1);
+}
+
+/* Đảm bảo giá không bị ẩn hoặc overflow */
+.product-price * {
+  max-width: 100%;
+  overflow: visible !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-name {
+    font-size: 14px;
+    min-height: 36px;
+  }
+  
+  .price-sale {
+    font-size: 16px;
+  }
+  
+  .price-original {
+    font-size: 12px;
+  }
+  
+  .discount-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .product-image {
+    height: 200px;
+  }
+  
+  .product-price {
+    min-height: 40px;
+  }
+}
+
+/* Fix cho trường hợp giá = 0 hoặc Liên hệ */
+.product-price .price-sale:contains("Liên hệ") {
+  color: #95a5a6;
+  font-style: italic;
+}
+/* end giá các sản phẩm  */
