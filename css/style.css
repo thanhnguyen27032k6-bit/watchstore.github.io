@@ -673,6 +673,119 @@ hotsale-product {
 
 /* Đăng nhập user  */
 
+/* phần profile */
+
+#btn-home,
+#logout-button,
+.btn-login,
+.register-btn-submit,
+.google-login-button-mock {
+    cursor: pointer;
+}
+
+
+.profile-area {
+  padding: 20px;
+  text-align: center;
+  font-size: 1.1em;
+  color: #333;
+  width: 60%;
+  height: 80%;
+  display: block;
+  border: 3px solid black;
+  background-color: white;
+  border-radius: 15px; 
+  position: fixed;       
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+  z-index: 1000;          
+}
+
+
+.profile-details{
+  margin-top: 20px;
+  text-align: left;
+  font-size: 1.2em;
+  border: 3px solid black;
+  padding: 10px;
+}
+
+.profile-fullname, .profile-email, .profile-phone, .profile-birthdate {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.profile-bottom {
+  padding: 20px;
+  display: flex;
+  margin-top: 20px;
+}
+
+.logout-button, .btn-home, #btn-edit-profile {
+  background-color: #ff6600;
+  height: auto;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin: 0 10px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+
+.profile-edit-form {
+  padding: 15px;
+  border: 2px solid #ff6600;
+  border-radius: 10px;
+  background-color: #fff;
+  width: 80%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.profile-edit-form .form-group {
+  margin-bottom: 10px;
+}
+
+.profile-edit-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-edit-form input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-save-profile,
+.btn-cancel-edit {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-save-profile {
+  background-color: #28a745;
+  color: white;
+  margin-right: 10px;
+}
+
+.btn-cancel-edit {
+  background-color: #dc3545;
+  color: white;
+}
+
+
+/* end phần profile */
+
 .login-page-wrapper {
   width: 100%;
   background-color: white;

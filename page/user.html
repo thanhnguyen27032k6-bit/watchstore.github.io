@@ -218,6 +218,49 @@
           </div>
         </div>
 
+        <div class="profile-area"> 
+          <div>
+            <h2>Chào mừng bạn đến với Watchsmember!</h2>
+            <p>Quản lý tài khoản và thông tin cá nhân của bạn tại đây.</p>
+          </div>
+          <div class="profile-details">
+            <strong>Tên đầy đủ:</strong> <span id="profile-fullname"></span><br />
+            <strong>Email:</strong> <span id="profile-email"></span><br />
+            <strong>Số điện thoại:</strong> <span id="profile-phone"></span><br />
+            <strong>Ngày sinh:</strong> <span id="profile-birthdate"></span><br />
+          </div>
+          <!-- Nút chỉnh sửa thông tin cá nhân -->
+          <div class="profile-edit-form" id="profile-edit-form" style="display: none; margin-top: 20px;">
+            <h3>Chỉnh sửa thông tin cá nhân</h3>
+            <form id="form-edit-profile">
+              <div class="form-group">
+                <label for="edit-fullname">Họ và tên</label>
+                <input type="text" id="edit-fullname" />
+              </div>
+              <div class="form-group">
+                <label for="edit-email">Email</label>
+                <input type="email" id="edit-email" />
+              </div>
+              <div class="form-group">
+                <label for="edit-phone">Số điện thoại</label>
+                <input type="tel" id="edit-phone" />
+              </div>
+              <div class="form-group">
+                <label for="edit-birthdate">Ngày sinh</label>
+                <input type="date" id="edit-birthdate" max="" />
+              </div>
+              <button type="submit" class="btn-save-profile">Lưu thay đổi</button>
+              <button type="button" class="btn-cancel-edit" id="btn-cancel-edit">Hủy</button>
+            </form>
+          </div>
+          <!--end chỉnh sửa-->
+          <div class="profile-bottom">
+            <div class="btn-home" id="btn-home">Về trang chủ</div>
+            <button type="button" id="btn-edit-profile">Chỉnh sửa thông tin cá nhân</button>
+            <div class="logout-button" id="logout-button">Đăng xuất</div>
+          </div>
+        </div>
+
         <div class="benefits-area">
           <div class="header-logo">
             <img src="../image/logo.jpg" alt="logo" />
@@ -260,101 +303,163 @@
     </div>
     <script src="../js/main.js"></script>
     <script>
-      // ✅ Set ngày max cho input date (ngày hôm nay)
+      // Set max cho date
       const today = new Date().toISOString().split('T')[0];
-      document.getElementById('reg-birthdate').setAttribute('max', today);
+      const regBirth = document.getElementById('reg-birthdate');
+      if (regBirth) regBirth.setAttribute('max', today);
 
-      // Xử lý đăng nhập thành công
-      document
-        .querySelector(".login-form")
-        .addEventListener("submit", function (e) {
+      // Helper lấy / lưu
+      function getUsers() {
+        try { return JSON.parse(localStorage.getItem("users")) || []; }
+        catch { return []; }
+      }
+      function saveUsers(users) { localStorage.setItem("users", JSON.stringify(users)); }
+      function getCurrentUser() {
+        try { return JSON.parse(localStorage.getItem("currentUser")); }
+        catch { return null; }
+      }
+      function saveCurrentUser(u) { localStorage.setItem("currentUser", JSON.stringify(u)); }
+
+      // Hiển thị / ẩn khu vực
+      function showProfileArea() {
+        const area = document.querySelector('.profile-area');
+        const loginArea = document.querySelector('.login-form-area');
+        if (area) area.style.display = 'block';
+        if (loginArea) loginArea.style.display = 'none';
+        renderProfile(); // cập nhật nội dung
+      }
+      function hideProfileArea() {
+        const area = document.querySelector('.profile-area');
+        if (area) area.style.display = 'none';
+        const loginArea = document.querySelector('.login-form-area');
+        if (loginArea) loginArea.style.display = 'block';
+      }
+
+      // Render profile vào các span có id tương ứng
+      function renderProfile() {
+        const user = getCurrentUser();
+        if (!user || !user.isLoggedIn) {
+          // nếu không có user thì ẩn profile
+          hideProfileArea();
+          return;
+        }
+
+        const elName = document.getElementById('profile-fullname');
+        const elEmail = document.getElementById('profile-email');
+        const elPhone = document.getElementById('profile-phone');
+        const elBirth = document.getElementById('profile-birthdate');
+
+        if (elName) elName.textContent = user.fullname || user.name || "Không có tên";
+        if (elEmail) elEmail.textContent = (user.email && user.email !== "N/A") ? user.email : "Chưa có";
+        if (elPhone) elPhone.textContent = user.phone || "N/A";
+        if (elBirth) elBirth.textContent = (user.birthdate && user.birthdate !== "N/A") ? user.birthdate : "Chưa có";
+      }
+
+      // Xử lý submit đăng nhập: KHÔNG redirect, chỉ hiện profile-area
+      const loginForm = document.querySelector('.login-form');
+      if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
           e.preventDefault();
+          const phone = (document.getElementById('login-phone').value || '').trim();
+          const password = (document.getElementById('login-password').value || '');
 
-          const phone = document.getElementById("login-phone").value;
-          const password = document.getElementById("login-password").value;
-
-          // Kiểm tra tài khoản trong localStorage
-          const users = JSON.parse(localStorage.getItem("users")) || [];
+          const users = getUsers();
           const user = users.find(u => u.phone === phone);
 
-          // Nếu tài khoản bị khóa
           if (user && user.locked) {
             alert("❌ Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên!");
             return;
           }
 
-          // Nếu tài khoản tồn tại và mật khẩu đúng
           if (user && user.password === password) {
+            // Lưu currentUser
             const userData = {
               isLoggedIn: true,
-              fullname: user.name,  // ✅ Đổi name → fullname
-              name: user.name,       // ✅ Thêm cả name
+              fullname: user.fullname || user.name || "",
+              name: user.name || user.fullname || "",
               email: user.email || "N/A",
-              phone: phone,
+              phone: user.phone,
               birthdate: user.birthdate || "N/A",
-              password: password,
-              loginTime: new Date().toISOString(),
+              password: user.password,
+              loginTime: new Date().toISOString()
             };
+            saveCurrentUser(userData);
 
-            localStorage.setItem("currentUser", JSON.stringify(userData));
-            showLoginSuccess();
-
+            showLoginSuccess();   // hiển thị noti nhỏ (tuỳ bạn)
+            // Hiển thị profile-area thay vì redirect
             setTimeout(() => {
-              window.location.href = "../index.html";
-            }, 2000);
+              showProfileArea();
+            }, 700); // để người dùng thấy thông báo ngắn rồi hiện profile
           } else {
             alert("❌ Số điện thoại hoặc mật khẩu không chính xác!");
           }
         });
+      }
 
-      // Xử lý đăng ký thành công
-      document
-        .querySelector(".register-form")
-        .addEventListener("submit", function (e) {
+      // Xử lý đăng ký (giữ logic đã chỉnh, sửa lỗi g)
+      const registerForm = document.querySelector('.register-form');
+      if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
           e.preventDefault();
 
-          const fullname = document.getElementById("reg-fullname").value;
-          const email = document.getElementById("reg-email").value;
-          const phone = document.getElementById("reg-phone").value;
-          const birthdate = document.getElementById("reg-birthdate").value;
-          const password = document.getElementById("reg-password").value;
-          const confirmPassword = document.getElementById("reg-pconfirm").value;
+          const fullname = (document.getElementById('reg-fullname').value || '').trim();
+          const email = (document.getElementById('reg-email').value || '').trim();
+          const phone = (document.getElementById('reg-phone').value || '').trim();
+          const birthdate = document.getElementById('reg-birthdate').value;
+          const password = document.getElementById('reg-password').value;
+          const confirmPassword = document.getElementById('reg-pconfirm').value;
 
-          // Kiểm tra mật khẩu khớp
           if (password !== confirmPassword) {
             alert("❌ Mật khẩu không khớp!");
             return;
           }
-
-          if (fullname && phone && password && birthdate) {
-            // Lưu thông tin user vào localStorage
-            const userData = {
-              isLoggedIn: true,
-              fullname: fullname,  // ✅ Lưu fullname
-              name: fullname,       // ✅ Thêm cả name
-              email: email || "N/A",
-              phone: phone,
-              birthdate: birthdate,
-              password: password,
-              loginTime: new Date().toISOString(),
-            };
-
-            localStorage.setItem("currentUser", JSON.stringify(userData));
-
-            // Hiển thị thông báo thành công
-            showRegisterSuccess();
-
-            // Chuyển hướng về trang chủ sau 2 giây
-            /*
-            setTimeout(() => {
-              window.location.href = "../index.html";
-            }, 2000);
-            */
-          } else {
+          if (!fullname || !phone || !password || !birthdate) {
             alert("❌ Vui lòng nhập đầy đủ thông tin!");
+            return;
           }
-        });
 
+          const users = getUsers();
+          const exists = users.find(u => u.phone === phone);
+          if (exists) {
+            alert("❌ Số điện thoại này đã được đăng ký. Vui lòng dùng số khác hoặc đăng nhập.");
+            return;
+          }
+
+          const newUser = {
+            name: fullname,
+            fullname: fullname,
+            email: email || "N/A",
+            phone: phone,
+            birthdate: birthdate,
+            password: password,
+            locked: false,
+            createdAt: new Date().toISOString()
+          };
+          users.push(newUser);
+          saveUsers(users);
+
+          // Auto-login sau đăng ký
+          const userData = {
+            isLoggedIn: true,
+            fullname: newUser.fullname,
+            name: newUser.name,
+            email: newUser.email,
+            phone: newUser.phone,
+            birthdate: newUser.birthdate,
+            password: newUser.password,
+            loginTime: new Date().toISOString()
+          };
+          saveCurrentUser(userData);
+
+          showRegisterSuccess();
+          // Sau thông báo, hiện profile-area (không redirect)
+          setTimeout(() => {
+            showProfileArea();
+          }, 800);
+        });
+      }
+
+      // Các hàm noti (giữ nguyên)
       function showLoginSuccess() {
         const notification = document.createElement("div");
         notification.style.cssText = `
@@ -364,20 +469,20 @@
           transform: translate(-50%, -50%);
           background: linear-gradient(135deg, #28a745, #20c997);
           color: white;
-          padding: 30px 40px;
-          border-radius: 15px;
+          padding: 22px 28px;
+          border-radius: 12px;
           z-index: 10000;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
           text-align: center;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         `;
         notification.innerHTML = `
-          <div style="font-size: 48px; margin-bottom: 15px;">🎉</div>
-          <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Đăng nhập thành công!</div>
-          <div>Chào mừng bạn quay trở lại</div>
-          <div style="margin-top: 15px; font-size: 14px; opacity: 0.9;">Đang chuyển hướng về trang chủ...</div>
+          <div style="font-size: 36px; margin-bottom: 8px;">🎉</div>
+          <div style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Đăng nhập thành công!</div>
+          <div style="font-size: 13px;">Chào mừng bạn quay trở lại</div>
         `;
         document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 900);
       }
 
       function showRegisterSuccess() {
@@ -389,31 +494,147 @@
           transform: translate(-50%, -50%);
           background: linear-gradient(135deg, #007bff, #0056b3);
           color: white;
-          padding: 30px 40px;
-          border-radius: 15px;
+          padding: 22px 28px;
+          border-radius: 12px;
           z-index: 10000;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
           text-align: center;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         `;
         notification.innerHTML = `
-          <div style="font-size: 48px; margin-bottom: 15px;">✨</div>
-          <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Đăng ký thành công!</div>
-          <div>Chào mừng thành viên mới</div>
-          <div style="margin-top: 15px; font-size: 14px; opacity: 0.9;">Đang chuyển hướng về trang chủ...</div>
+          <div style="font-size: 36px; margin-bottom: 8px;">✨</div>
+          <div style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Đăng ký thành công!</div>
+          <div style="font-size: 13px;">Bạn đã được đăng nhập tự động</div>
         `;
         document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 1000);
       }
 
-      // Hàm hiển thị overlay đăng ký
-      function showRegisterOverlay() {
-        document.getElementById("overlay").style.display = "block";
+      // Nút logout trong profile-area
+      const logoutBtn = document.getElementById('logout-button');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          localStorage.removeItem('currentUser');
+          // reload page về trang login hiện tại
+          location.reload();
+        });
       }
 
-      // Hàm ẩn overlay đăng ký
-      function hideRegisterOverlay() {
+      // Nút về trang chủ
+      const btnHome = document.getElementById('btn-home');
+      if (btnHome) {
+        btnHome.addEventListener('click', function() {
+          // chuyển về index (sửa đường dẫn nếu cần)
+          window.location.href = "../index.html";
+        });
+      }
+
+      // Khi load trang: nếu đã đăng nhập thì hiện profile ngay
+      document.addEventListener('DOMContentLoaded', function() {
+        const cu = getCurrentUser();
+        if (cu && cu.isLoggedIn) {
+          showProfileArea();
+        } else {
+          hideProfileArea();
+        }
+      });
+      function showProfileArea() {
+        document.querySelector(".login-form-area").style.display = "none";
+        document.querySelector(".benefits-area").style.display = "none";
         document.getElementById("overlay").style.display = "none";
+
+        const profileArea = document.querySelector(".profile-area");
+        profileArea.style.display = "block";
+
+        // Lấy currentUser từ localStorage
+        const cu = JSON.parse(localStorage.getItem("currentUser"));
+        if (!cu) return;
+
+        document.getElementById("profile-fullname").textContent = cu.fullname || "N/A";
+        document.getElementById("profile-email").textContent = cu.email || "N/A";
+        document.getElementById("profile-phone").textContent = cu.phone || "N/A";
+        document.getElementById("profile-birthdate").textContent =
+          cu.birthdate || "N/A";
       }
+      function showLoginSuccess() {
+      }
+      // Xử lý nút Chỉnh sửa thông tin cá nhân
+      const btnEditProfile = document.getElementById("btn-edit-profile");
+      const editForm = document.getElementById("profile-edit-form");
+      const profileDetails = document.querySelector(".profile-details"); // khu vực hiển thị profile
+
+      if (btnEditProfile && editForm && profileDetails) {
+        editForm.style.display = "none"; // mặc định ẩn
+
+        btnEditProfile.addEventListener("click", function () {
+          const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+          // Điền dữ liệu hiện tại vào form
+          document.getElementById("edit-fullname").value = currentUser.fullname || "";
+          document.getElementById("edit-email").value = currentUser.email && currentUser.email !== "N/A" ? currentUser.email : "";
+          document.getElementById("edit-phone").value = currentUser.phone || "";
+          document.getElementById("edit-birthdate").value = currentUser.birthdate && currentUser.birthdate !== "N/A" ? currentUser.birthdate : "";
+
+          document.getElementById("edit-birthdate").setAttribute("max", new Date().toISOString().split('T')[0]);
+
+          // Ẩn profile details và nút edit
+          profileDetails.style.display = "none";
+          btnEditProfile.style.display = "none";
+
+          // Hiển thị form edit
+          editForm.style.display = "block";
+        });
+      }
+
+      // Khi nhấn Hủy
+      const btnCancelEdit = document.getElementById("btn-cancel-edit");
+      if (btnCancelEdit && editForm && profileDetails && btnEditProfile) {
+        btnCancelEdit.addEventListener("click", function () {
+          editForm.style.display = "none";
+          profileDetails.style.display = "block"; // hiện lại profile
+          btnEditProfile.style.display = "inline-block"; // hiện lại nút chỉnh sửa
+        });
+      }
+      // Xử lý submit form chỉnh sửa profile
+      const editProfileForm = document.getElementById("form-edit-profile");
+        if (editProfileForm) {
+          editProfileForm.addEventListener("submit", function (e) {
+            e.preventDefault(); // ngăn reload
+
+            // Lấy giá trị mới
+            const newFullname = document.getElementById("edit-fullname").value.trim();
+            const newEmail = document.getElementById("edit-email").value.trim() || "N/A";
+            const newPhone = document.getElementById("edit-phone").value.trim();
+            const newBirthdate = document.getElementById("edit-birthdate").value || "N/A";
+
+            // Cập nhật localStorage
+            const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+            currentUser.fullname = newFullname;
+            currentUser.email = newEmail;
+            currentUser.phone = newPhone;
+            currentUser.birthdate = newBirthdate;
+            localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+            // Cập nhật danh sách users nếu muốn lưu vĩnh viễn
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const idx = users.findIndex(u => u.phone === currentUser.phone);
+            if (idx !== -1) {
+              users[idx] = { ...users[idx], fullname: newFullname, email: newEmail, birthdate: newBirthdate };
+              localStorage.setItem("users", JSON.stringify(users));
+            }
+
+            // Hiển thị lại profile và ẩn form
+            document.querySelector(".profile-details").style.display = "block";
+            document.getElementById("profile-edit-form").style.display = "none";
+            document.getElementById("btn-edit-profile").style.display = "inline-block";
+
+            // Cập nhật giao diện
+            renderProfile();
+            alert("✅ Thông tin cá nhân đã được cập nhật!");
+          });
+        }
+
     </script>
+
   </body>
 </html>
