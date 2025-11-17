@@ -1334,24 +1334,43 @@ productRender();
         try { if (typeof populateCategoryFilter === 'function') populateCategoryFilter(); } catch(e) { console.warn(e); }
 
         //sau này liên kết với phiếu nhập hàng để có số lượng
-        // Đồng bộ dữ liệu kho với danh sách sản phẩm
+        // Đồng bộ dữ liệu kho với danh sách sản phẩm (tự động thêm sku và name)
         function syncInventoryWithProducts() {
-            const currentProducts = JSON.parse(localStorage.getItem("products")) || [];
+            // Lấy dữ liệu từ localStorage-products trước
+            let currentProducts = JSON.parse(localStorage.getItem("products")) || [];
+            
+            // Nếu chưa có products trong localStorage, lấy từ data.js
+            if (currentProducts.length === 0 && typeof window.PRODUCTS !== 'undefined') {
+                currentProducts = window.PRODUCTS;
+            }
+            
             let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
 
-            // Nếu chưa có entry cho sản phẩm nào trong inventory -> thêm vào với stock mặc định
+            // Duyệt qua tất cả sản phẩm hiện tại
             currentProducts.forEach(p => {
-                const exists = inventory.find(i => i.productId === p.id);
-                if (!exists) {
-                    // Mặc định số lượng khi thêm mới là 20 (có thể thay đổi sau trong UI)
-                    inventory.push({ productId: p.id, stock: 20 });
+                const existingIndex = inventory.findIndex(i => i.productId === p.id);
+                
+                if (existingIndex === -1) {
+                    // ✅ Nếu chưa có entry -> Thêm mới với sku, name và stock mặc định
+                    inventory.push({
+                        productId: p.id,
+                        sku: p.sku || `SKU-${p.id}`,
+                        name: p.name || `Product ${p.id}`,
+                        stock: 20  // Số lượng mặc định
+                    });
+                } else {
+                    // ✅ Nếu đã có entry -> Cập nhật sku và name (để bắt kịp với thay đổi từ admin)
+                    inventory[existingIndex].sku = p.sku || `SKU-${p.id}`;
+                    inventory[existingIndex].name = p.name || `Product ${p.id}`;
+                    // Giữ nguyên stock cũ
                 }
             });
 
-            // Lọc bỏ các mục inventory không còn tương ứng product (tùy chọn)
+            // Lọc bỏ các mục inventory không còn tương ứng product
             inventory = inventory.filter(i => currentProducts.find(p => p.id === i.productId));
 
             localStorage.setItem("inventory", JSON.stringify(inventory));
+            console.log("✅ Inventory đã được đồng bộ với sku và name:", inventory);
         }
 
         // Hàm băm đơn giản để tạo số lượng mặc định nếu cần (giữ tính ổn định)

@@ -257,7 +257,7 @@
         color: var(--color-primary);
       }
 
-      /* Navigation Tabs - ĐÃ SỬA */
+      /* Navigation Tabs */
       .nav-tabs {
         display: flex;
         background: white;
@@ -309,7 +309,7 @@
         height: 16px;
       }
 
-      /* Page Sections - ĐÃ SỬA */
+      /* Page Sections */
       .page-section {
         display: none;
         opacity: 0;
@@ -1329,7 +1329,7 @@
         <a href="#" id="breadcrumb-current">Giỏ hàng</a>
       </div>
 
-      <!-- Navigation Tabs - ĐÃ SỬA -->
+      <!-- Navigation Tabs -->
       <div class="nav-tabs">
         <button class="nav-tab active" data-target="cart-page">
           <i class="fas fa-shopping-cart"></i> Giỏ hàng
@@ -1971,20 +1971,178 @@
         }
       }
 
-      // Quản lý giỏ hàng, thanh toán và đơn hàng
+      // Quản lý giỏ hàng, thanh toán và đơn hàng với hệ thống user riêng biệt
       class OrderManager {
         constructor() {
           this.cart = JSON.parse(localStorage.getItem("cartData"))?.items || [];
-          this.orders = JSON.parse(localStorage.getItem("userOrders")) || [];
+          this.orders = this.loadUserOrders();
           this.currentPage = "cart-page";
           this.init();
         }
 
+        // Lấy ID của user hiện tại
+        getUserId() {
+          const userData = JSON.parse(localStorage.getItem("currentUser"));
+          if (userData && userData.isLoggedIn) {
+            return userData.phone || userData.email;
+          }
+          return null;
+        }
+
+        // Lấy thông tin user hiện tại
+        getUserInfo() {
+          const userData = JSON.parse(localStorage.getItem("currentUser"));
+          if (userData && userData.isLoggedIn) {
+            return {
+              userId: userData.phone || userData.email,
+              fullname: userData.fullname,
+              email: userData.email,
+              phone: userData.phone,
+            };
+          }
+          return null;
+        }
+
+        // Tải lịch sử đơn hàng của user hiện tại
+        loadUserOrders() {
+          const userId = this.getUserId();
+          if (!userId) {
+            console.log("❌ Không tìm thấy user ID");
+            return [];
+          }
+
+          const userOrdersKey = `userOrders_${userId}`;
+          const orders = JSON.parse(localStorage.getItem(userOrdersKey)) || [];
+          console.log(
+            `📦 Đã tải ${orders.length} đơn hàng cho user: ${userId}`
+          );
+          return orders;
+        }
+
+        // Lưu lịch sử đơn hàng của user hiện tại
+        saveUserOrders() {
+          const userId = this.getUserId();
+          if (!userId) {
+            console.log("❌ Không thể lưu orders: Không tìm thấy user ID");
+            return;
+          }
+
+          const userOrdersKey = `userOrders_${userId}`;
+          localStorage.setItem(userOrdersKey, JSON.stringify(this.orders));
+          this.updateOrdersCount();
+          console.log(
+            `💾 Đã lưu ${this.orders.length} đơn hàng cho user: ${userId}`
+          );
+        }
+
+        // Gửi đơn hàng lên admin
+        sendOrderToAdmin(orderData) {
+          try {
+            // Lấy danh sách đơn hàng từ admin hoặc tạo mới
+            const adminOrders =
+              JSON.parse(localStorage.getItem("adminOrders")) || [];
+
+            // Tạo đối tượng đơn hàng cho admin
+            const adminOrder = {
+              ...orderData,
+              id: orderData.id,
+              receivedAt: new Date().toISOString(),
+              adminStatus: "pending",
+              adminNotes: "",
+              userInfo: this.getUserInfo() || {
+                userId: orderData.userId,
+                fullname: orderData.shippingInfo.fullname,
+                phone: orderData.shippingInfo.phone,
+                email: orderData.email,
+              },
+            };
+
+            // Thêm đơn hàng mới vào danh sách admin
+            adminOrders.unshift(adminOrder);
+
+            // Lưu lại danh sách đơn hàng admin
+            localStorage.setItem("adminOrders", JSON.stringify(adminOrders));
+
+            console.log("📤 Đã gửi đơn hàng lên admin:", adminOrder.id);
+            console.log("📋 Tổng số đơn hàng trong admin:", adminOrders.length);
+
+            // ĐỒNG BỘ VỚI USER ORDERS - QUAN TRỌNG
+            this.syncOrdersToUserOrders(adminOrder);
+
+            return true;
+          } catch (error) {
+            console.error("❌ Lỗi khi gửi đơn hàng lên admin:", error);
+            return false;
+          }
+        }
+
+        // Đồng bộ đơn hàng với userOrders
+        syncOrdersToUserOrders(adminOrder) {
+          try {
+            const userId = this.getUserId();
+            if (!userId) {
+              console.log("❌ Không thể đồng bộ: Không tìm thấy user ID");
+              return;
+            }
+
+            const userOrdersKey = `userOrders_${userId}`;
+            let userOrders =
+              JSON.parse(localStorage.getItem(userOrdersKey)) || [];
+
+            // Kiểm tra xem đơn hàng đã tồn tại chưa
+            const existingOrderIndex = userOrders.findIndex(
+              (order) => order.id === adminOrder.id
+            );
+
+            if (existingOrderIndex === -1) {
+              // Thêm đơn hàng mới vào user orders
+              userOrders.unshift({
+                id: adminOrder.id,
+                userId: userId,
+                orderDate: adminOrder.orderDate,
+                status: "pending",
+                items: adminOrder.items,
+                subtotal: adminOrder.subtotal,
+                discount: adminOrder.discount,
+                total: adminOrder.total,
+                shippingInfo: adminOrder.shippingInfo,
+              });
+
+              localStorage.setItem(userOrdersKey, JSON.stringify(userOrders));
+              console.log(
+                "✅ Đã đồng bộ đơn hàng với user orders:",
+                adminOrder.id
+              );
+            }
+          } catch (error) {
+            console.error("❌ Lỗi khi đồng bộ với user orders:", error);
+          }
+        }
+
+        // Khôi phục giỏ hàng của user khi đăng nhập
+        restoreUserCart() {
+          const userId = this.getUserId();
+          if (!userId) return;
+
+          const userCartKey = `cart_${userId}`;
+          const savedCart = JSON.parse(localStorage.getItem(userCartKey));
+
+          if (savedCart && savedCart.items && savedCart.items.length > 0) {
+            this.cart = savedCart.items;
+            this.saveCart();
+            this.renderCart();
+            this.updateCartCount();
+            console.log(`🔄 Đã khôi phục giỏ hàng cho user: ${userId}`);
+          }
+        }
+
         init() {
-          // Kiểm tra đăng nhập trước khi khởi tạo giỏ hàng
           if (!this.checkAuthentication()) {
             return;
           }
+
+          // Khôi phục giỏ hàng của user nếu có
+          this.restoreUserCart();
 
           this.mergeDuplicateProducts();
           this.renderCart();
@@ -1992,20 +2150,22 @@
           this.setupEventListeners();
           this.updateCartCount();
           this.updateOrdersCount();
+
+          // BẬT đồng bộ thời gian thực
+          this.setupRealTimeSync();
         }
 
         // Kiểm tra xác thực
         checkAuthentication() {
           const userData = JSON.parse(localStorage.getItem("currentUser"));
           if (!userData || !userData.isLoggedIn) {
-            // Nếu chưa đăng nhập, chuyển hướng về trang chủ
             window.location.href = "../index.html";
             return false;
           }
           return true;
         }
 
-        // Hàm hợp nhất sản phẩm trùng nhau
+        // Hợp nhất sản phẩm trùng nhau
         mergeDuplicateProducts() {
           console.log(
             "🔄 Đang hợp nhất các sản phẩm trùng nhau trong giỏ hàng..."
@@ -2022,9 +2182,6 @@
             if (productMap.has(productKey)) {
               const existingItem = productMap.get(productKey);
               existingItem.quantity += item.quantity;
-              console.log(
-                `🔄 Đã hợp nhất: ${item.name} - Số lượng mới: ${existingItem.quantity}`
-              );
             } else {
               productMap.set(productKey, { ...item });
             }
@@ -2035,14 +2192,76 @@
           console.log("✅ Đã hợp nhất các sản phẩm trùng nhau trong giỏ hàng");
         }
 
+        // Thiết lập đồng bộ thời gian thực
+        setupRealTimeSync() {
+          // Kiểm tra cập nhật mỗi 3 giây
+          setInterval(() => {
+            this.checkForStatusUpdates();
+          }, 3000);
+        }
+
+        // Kiểm tra cập nhật trạng thái từ admin
+        checkForStatusUpdates() {
+          const userId = this.getUserId();
+          if (!userId) return;
+
+          const userOrdersKey = `userOrders_${userId}`;
+          let userOrders =
+            JSON.parse(localStorage.getItem(userOrdersKey)) || [];
+          let hasUpdates = false;
+
+          // Kiểm tra từng đơn hàng
+          userOrders.forEach((userOrder) => {
+            // Kiểm tra trong adminOrders
+            const adminOrders =
+              JSON.parse(localStorage.getItem("adminOrders")) || [];
+            const adminOrder = adminOrders.find((o) => o.id === userOrder.id);
+
+            if (adminOrder && adminOrder.status !== userOrder.status) {
+              console.log(
+                `🔄 Phát hiện thay đổi trạng thái: ${userOrder.id} từ ${userOrder.status} -> ${adminOrder.status}`
+              );
+              userOrder.status = adminOrder.status;
+              userOrder.lastUpdated = adminOrder.lastUpdated;
+              hasUpdates = true;
+            }
+
+            // Kiểm tra trong userOrders toàn cục
+            const globalUserOrders =
+              JSON.parse(localStorage.getItem("userOrders")) || [];
+            const globalOrder = globalUserOrders.find(
+              (o) => o.id === userOrder.id
+            );
+
+            if (globalOrder && globalOrder.status !== userOrder.status) {
+              console.log(
+                `🔄 Phát hiện thay đổi từ global: ${userOrder.id} từ ${userOrder.status} -> ${globalOrder.status}`
+              );
+              userOrder.status = globalOrder.status;
+              userOrder.lastUpdated = globalOrder.lastUpdated;
+              hasUpdates = true;
+            }
+          });
+
+          if (hasUpdates) {
+            localStorage.setItem(userOrdersKey, JSON.stringify(userOrders));
+            this.orders = userOrders;
+
+            // Nếu đang ở trang lịch sử đơn hàng, render lại
+            if (this.currentPage === "order-history-page") {
+              this.renderOrders();
+              console.log("✅ Đã cập nhật trạng thái đơn hàng từ server");
+            }
+          }
+        }
+
         setupEventListeners() {
-          // Navigation tabs - ĐÃ SỬA
+          // Navigation tabs
           document.querySelectorAll(".nav-tab").forEach((tab) => {
             tab.addEventListener("click", () => {
               const target = tab.dataset.target;
               this.navigateToPage(target);
 
-              // Update active tab
               document.querySelectorAll(".nav-tab").forEach((t) => {
                 t.classList.remove("active");
               });
@@ -2104,14 +2323,13 @@
               }
             });
 
-          // Go to checkout button - ĐÃ SỬA
+          // Go to checkout button
           document
             .getElementById("go-to-checkout")
             .addEventListener("click", () => {
               if (this.cart.length > 0) {
                 this.navigateToPage("checkout-page");
 
-                // Update active tab
                 document.querySelectorAll(".nav-tab").forEach((t) => {
                   t.classList.remove("active");
                 });
@@ -2119,7 +2337,6 @@
                   .querySelector('[data-target="checkout-page"]')
                   .classList.add("active");
 
-                // Update breadcrumb
                 document.getElementById("breadcrumb-current").textContent =
                   "Thanh toán";
               } else {
@@ -2160,21 +2377,19 @@
               { value: "pn", text: "Quận Phú Nhuận" },
               { value: "bt", text: "Quận Bình Thạnh" },
               { value: "btan", text: "Quận Bình Tân" },
-              { value: "thuduc", text: "Thành phố Thủ Đức" }
+              { value: "thuduc", text: "Thành phố Thủ Đức" },
             ],
             hn: [
               { value: "hk", text: "Quận Hoàng Kiếm" },
               { value: "bd", text: "Quận Ba Đình" },
               { value: "cg", text: "Quận Cầu Giấy" },
               { value: "th", text: "Quận Tây Hồ" },
-              { value: "dĐ", text: "Quận Đống Đa" }, 
+              { value: "dĐ", text: "Quận Đống Đa" },
               { value: "lb", text: "Quận Long Biên" },
               { value: "hđ", text: "Quận Hà Đông" },
               { value: "tx", text: "Quận Thanh Xuân" },
               { value: "tl", text: "Quận Từ Liêm" },
               { value: "hbt", text: "Quận Hai Bà Trưng" },
-              { value: "dt", text: "Quận Đa Tốn" },
-              { value: "st", text: "Quận Sơn Tây" },
             ],
             dn: [
               { value: "hc", text: "Quận Hải Châu" },
@@ -2183,15 +2398,16 @@
               { value: "lienchieu", text: "Quận Liên Chiểu" },
               { value: "nguhanhson", text: "Quận Ngũ Hành Sơn" },
               { value: "camle", text: "Quận Cẩm Lệ" },
-            ]
+            ],
           };
 
           citySelect.addEventListener("change", () => {
             const city = citySelect.value;
-            districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-            
+            districtSelect.innerHTML =
+              '<option value="">Chọn quận/huyện</option>';
+
             if (city && districtMap[city]) {
-              districtMap[city].forEach(district => {
+              districtMap[city].forEach((district) => {
                 const option = document.createElement("option");
                 option.value = district.value;
                 option.textContent = district.text;
@@ -2287,10 +2503,10 @@
           document
             .getElementById("refresh-orders")
             .addEventListener("click", () => {
-              // Reload orders from localStorage to get latest updates from admin
-              this.orders = JSON.parse(localStorage.getItem("userOrders")) || [];
+              // Reload orders từ localStorage để cập nhật từ admin
+              this.orders = this.loadUserOrders();
               this.renderOrders();
-              alert('✅ Đã cập nhật lịch sử đơn hàng từ máy chủ');
+              alert("✅ Đã cập nhật lịch sử đơn hàng từ máy chủ");
             });
 
           // Order details toggle
@@ -2307,14 +2523,10 @@
               }
             });
 
-          // Xử lý nút quay về trang chủ SAU KHI đã xem trang xác nhận
+          // Xử lý nút quay về trang chủ
           document.querySelector(".btn-home").addEventListener("click", (e) => {
             e.preventDefault();
-
-            // 🔥 QUAN TRỌNG: Reset giỏ hàng trước khi quay về trang chủ
             this.resetCart();
-
-            // Chuyển hướng về trang chủ
             window.location.href = "../index.html";
           });
         }
@@ -2331,54 +2543,54 @@
 
           if (this.cart.length === 0) {
             container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-shopping-cart"></i>
-                            <p>Giỏ hàng của bạn đang trống</p>
-                            <button class="btn btn-continue" onclick="window.location.href='../index.html'">
-                                <i class="fas fa-arrow-left"></i> Tiếp tục mua hàng
-                            </button>
-                        </div>
-                    `;
+                      <div class="empty-state">
+                          <i class="fas fa-shopping-cart"></i>
+                          <p>Giỏ hàng của bạn đang trống</p>
+                          <button class="btn btn-continue" onclick="window.location.href='../index.html'">
+                              <i class="fas fa-arrow-left"></i> Tiếp tục mua hàng
+                          </button>
+                      </div>
+                  `;
             return;
           }
 
           container.innerHTML = this.cart
             .map(
               (item) => `
-                        <div class="cart-item" data-id="${item.id}">
-                            <div class="cart-item-image">
-                                <img src="${item.image}" alt="${
+                      <div class="cart-item" data-id="${item.id}">
+                          <div class="cart-item-image">
+                              <img src="${item.image}" alt="${
                 item.name
               }" onerror="this.src='../image/placeholder.jpg'">
-                            </div>
-                            <div class="cart-item-info">
-                                <div class="cart-item-name">${item.name}</div>
-                                <div class="cart-item-sku">Mã: ${item.sku}</div>
-                                <div class="cart-item-price">${this.formatPrice(
-                                  item.price
-                                )}</div>
-                            </div>
-                            <div class="cart-item-quantity">
-                                <button class="quantity-btn quantity-decrease" ${
-                                  item.quantity <= 1 ? "disabled" : ""
-                                }>
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="quantity-input" value="${
-                                  item.quantity
-                                }" min="1" readonly>
-                                <button class="quantity-btn quantity-increase">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <div class="cart-item-total">${this.formatPrice(
-                              item.price * item.quantity
-                            )}</div>
-                            <div class="cart-item-remove">
-                                <i class="fas fa-trash"></i>
-                            </div>
-                        </div>
-                    `
+                          </div>
+                          <div class="cart-item-info">
+                              <div class="cart-item-name">${item.name}</div>
+                              <div class="cart-item-sku">Mã: ${item.sku}</div>
+                              <div class="cart-item-price">${this.formatPrice(
+                                item.price
+                              )}</div>
+                          </div>
+                          <div class="cart-item-quantity">
+                              <button class="quantity-btn quantity-decrease" ${
+                                item.quantity <= 1 ? "disabled" : ""
+                              }>
+                                  <i class="fas fa-minus"></i>
+                              </button>
+                              <input type="number" class="quantity-input" value="${
+                                item.quantity
+                              }" min="1" readonly>
+                              <button class="quantity-btn quantity-increase">
+                                  <i class="fas fa-plus"></i>
+                              </button>
+                          </div>
+                          <div class="cart-item-total">${this.formatPrice(
+                            item.price * item.quantity
+                          )}</div>
+                          <div class="cart-item-remove">
+                              <i class="fas fa-trash"></i>
+                          </div>
+                      </div>
+                  `
             )
             .join("");
         }
@@ -2394,31 +2606,31 @@
           container.innerHTML = this.cart
             .map(
               (item) => `
-                    <div class="order-item" data-id="${item.id}">
-                        <div class="order-item-image">
-                            <img src="${item.image}" alt="${
+                      <div class="order-item" data-id="${item.id}">
+                          <div class="order-item-image">
+                              <img src="${item.image}" alt="${
                 item.name
               }" onerror="this.src='../image/placeholder.jpg'">
-                        </div>
-                        <div class="order-item-info">
-                            <div class="order-item-name">${item.name}</div>
-                            <div class="order-item-price">${this.formatPrice(
-                              item.price
-                            )}</div>
-                            <div class="order-item-quantity">
-                                <button class="quantity-btn quantity-decrease" ${
-                                  item.quantity <= 1 ? "disabled" : ""
-                                }>
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <span>${item.quantity}</span>
-                                <button class="quantity-btn quantity-increase">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `
+                          </div>
+                          <div class="order-item-info">
+                              <div class="order-item-name">${item.name}</div>
+                              <div class="order-item-price">${this.formatPrice(
+                                item.price
+                              )}</div>
+                              <div class="order-item-quantity">
+                                  <button class="quantity-btn quantity-decrease" ${
+                                    item.quantity <= 1 ? "disabled" : ""
+                                  }>
+                                      <i class="fas fa-minus"></i>
+                                  </button>
+                                  <span>${item.quantity}</span>
+                                  <button class="quantity-btn quantity-increase">
+                                      <i class="fas fa-plus"></i>
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  `
             )
             .join("");
         }
@@ -2435,17 +2647,17 @@
           container.innerHTML = this.cart
             .map(
               (item) => `
-                    <tr>
-                        <td class="item-name">${item.name}</td>
-                        <td>${item.quantity}</td>
-                        <td style="text-align: right" class="item-price">${this.formatPrice(
-                          item.price
-                        )}</td>
-                        <td style="text-align: right" class="item-price">${this.formatPrice(
-                          item.price * item.quantity
-                        )}</td>
-                    </tr>
-                `
+                      <tr>
+                          <td class="item-name">${item.name}</td>
+                          <td>${item.quantity}</td>
+                          <td style="text-align: right" class="item-price">${this.formatPrice(
+                            item.price
+                          )}</td>
+                          <td style="text-align: right" class="item-price">${this.formatPrice(
+                            item.price * item.quantity
+                          )}</td>
+                      </tr>
+                  `
             )
             .join("");
         }
@@ -2497,14 +2709,14 @@
 
           if (filteredOrders.length === 0) {
             container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-box-open"></i>
-                            <p>Chưa có đơn hàng nào</p>
-                            <button class="btn btn-continue" onclick="orderManager.navigateToPage('cart-page')">
-                                <i class="fas fa-shopping-cart"></i> Mua sắm ngay
-                            </button>
-                        </div>
-                    `;
+                      <div class="empty-state">
+                          <i class="fas fa-box-open"></i>
+                          <p>Chưa có đơn hàng nào</p>
+                          <button class="btn btn-continue" onclick="orderManager.navigateToPage('cart-page')">
+                              <i class="fas fa-shopping-cart"></i> Mua sắm ngay
+                          </button>
+                      </div>
+                  `;
             return;
           }
 
@@ -2521,68 +2733,80 @@
           const statusClass = `status-${order.status}`;
           const statusText = this.getStatusText(order.status);
 
+          // Thêm thời gian cập nhật nếu có
+          const lastUpdated = order.lastUpdated
+            ? ` (Cập nhật: ${new Date(order.lastUpdated).toLocaleTimeString(
+                "vi-VN"
+              )})`
+            : "";
+
           const itemsList = order.items
             .map(
               (item) => `
-                    <div class="order-item-history">
-                        <div class="order-item-image-history">
-                            <img src="${item.image}" alt="${
+                      <div class="order-item-history">
+                          <div class="order-item-image-history">
+                              <img src="${item.image}" alt="${
                 item.name
               }" onerror="this.src='../image/placeholder.jpg'">
-                        </div>
-                        <div class="order-item-info-history">
-                            <div class="order-item-name-history">${
-                              item.name
-                            }</div>
-                            <div class="order-item-price-history">${this.formatPrice(
-                              item.price
-                            )}</div>
-                            <div class="order-item-quantity-history">Số lượng: ${
-                              item.quantity
-                            }</div>
-                        </div>
-                    </div>
-                `
+                          </div>
+                          <div class="order-item-info-history">
+                              <div class="order-item-name-history">${
+                                item.name
+                              }</div>
+                              <div class="order-item-price-history">${this.formatPrice(
+                                item.price
+                              )}</div>
+                              <div class="order-item-quantity-history">Số lượng: ${
+                                item.quantity
+                              }</div>
+                          </div>
+                      </div>
+                  `
             )
             .join("");
 
           return `
-                    <div class="order-card" data-id="${order.id}">
-                        <div class="order-header">
-                            <div class="order-info">
-                                <div class="order-id">${order.id}</div>
-                                <div class="order-date">${order.orderDate}</div>
-                            </div>
-                            <div class="order-status ${statusClass}">${statusText}</div>
-                        </div>
-                        <div class="order-summary-short">
-                            <div class="order-items-count">${itemsCount} sản phẩm</div>
-                            <div class="order-total">${this.formatPrice(
-                              order.total
-                            )}</div>
-                        </div>
-                        <div class="order-details">
-                            <div class="order-items-list">
-                                ${itemsList}
-                            </div>
-                            <div class="order-shipping-info">
-                                <div class="shipping-title">Thông tin giao hàng</div>
-                                <div class="shipping-address">
-                                    <strong>${
-                                      order.shippingInfo.fullname
-                                    }</strong><br>
-                                    ${order.shippingInfo.phone}<br>
-                                    ${order.shippingInfo.address}, ${
+                      <div class="order-card" data-id="${order.id}">
+                          <div class="order-header">
+                              <div class="order-info">
+                                  <div class="order-id">${order.id}</div>
+                                  <div class="order-date">
+                                      ${new Date(
+                                        order.orderDate
+                                      ).toLocaleDateString("vi-VN")}
+                                      ${lastUpdated}
+                                  </div>
+                              </div>
+                              <div class="order-status ${statusClass}">${statusText}</div>
+                          </div>
+                          <div class="order-summary-short">
+                              <div class="order-items-count">${itemsCount} sản phẩm</div>
+                              <div class="order-total">${this.formatPrice(
+                                order.total
+                              )}</div>
+                          </div>
+                          <div class="order-details">
+                              <div class="order-items-list">
+                                  ${itemsList}
+                              </div>
+                              <div class="order-shipping-info">
+                                  <div class="shipping-title">Thông tin giao hàng</div>
+                                  <div class="shipping-address">
+                                      <strong>${
+                                        order.shippingInfo.fullname
+                                      }</strong><br>
+                                      ${order.shippingInfo.phone}<br>
+                                      ${order.shippingInfo.address}, ${
             order.shippingInfo.district
           }, ${order.shippingInfo.city}
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn-view-details" style="margin-top: 15px;">
-                            <i class="fas fa-chevron-down"></i> Xem chi tiết
-                        </button>
-                    </div>
-                `;
+                                  </div>
+                              </div>
+                          </div>
+                          <button class="btn-view-details" style="margin-top: 15px;">
+                              <i class="fas fa-chevron-down"></i> Xem chi tiết
+                          </button>
+                      </div>
+                  `;
         }
 
         toggleOrderDetails(orderId) {
@@ -2663,6 +2887,24 @@
         increaseQuantity(id) {
           const item = this.cart.find((item) => item.id === id);
           if (item) {
+            // ✅ KIỂM TRA STOCK TỪ LOCALSTORAGE-INVENTORY
+            const inventory =
+              JSON.parse(localStorage.getItem("inventory")) || [];
+            // Tìm sản phẩm trong inventory bằng tên hoặc sku
+            const productInventory = inventory.find(
+              (i) =>
+                i.productId === item.id ||
+                i.sku === item.sku ||
+                i.name === item.name
+            );
+            const stock = productInventory ? productInventory.stock : null;
+
+            // Nếu stock = 0 hoặc quantity sắp vượt quá stock
+            if (stock !== null && item.quantity >= stock) {
+              alert("❌ Số lượng sản phẩm không đủ");
+              return; // Dừng việc tăng quantity
+            }
+
             item.quantity++;
             this.saveCart();
             this.renderCart();
@@ -2715,11 +2957,6 @@
             lastUpdated: new Date().toISOString(),
           };
           localStorage.setItem("cartData", JSON.stringify(cartData));
-        }
-
-        saveOrders() {
-          localStorage.setItem("userOrders", JSON.stringify(this.orders));
-          this.updateOrdersCount();
         }
 
         navigateToPage(pageId) {
@@ -2814,6 +3051,16 @@
         }
 
         processOrder() {
+          const userId = this.getUserId();
+          if (!userId) {
+            alert("Vui lòng đăng nhập để đặt hàng!");
+            return;
+          }
+
+          if (!this.validateCheckoutForm()) {
+            return;
+          }
+
           const now = new Date();
           const orderData = {
             fullname: document.getElementById("fullname").value,
@@ -2857,26 +3104,16 @@
             document.getElementById("customer-note").style.display = "none";
           }
 
-          // Tạo đơn hàng mới cho lịch sử
+          // Tạo đơn hàng mới cho lịch sử - THÊM userId
           const newOrder = {
             id: orderData.orderId,
+            userId: userId,
             orderDate: orderData.orderDateISO,
             status: "pending",
             items: [...this.cart],
-            subtotal: this.cart.reduce(
-              (sum, item) => sum + item.price * item.quantity,
-              0
-            ),
-            discount:
-              this.cart.reduce(
-                (sum, item) => sum + item.price * item.quantity,
-                0
-              ) * 0.2,
-            total:
-              this.cart.reduce(
-                (sum, item) => sum + item.price * item.quantity,
-                0
-              ) * 0.8,
+            subtotal: this.calculateSubtotal(),
+            discount: this.calculateDiscount(),
+            total: this.calculateTotal(),
             shippingInfo: {
               fullname: orderData.fullname,
               phone: orderData.phone,
@@ -2886,14 +3123,26 @@
             },
           };
 
-          // Thêm vào danh sách đơn hàng
+          // Thêm vào danh sách đơn hàng của user
           this.orders.unshift(newOrder);
-          this.saveOrders();
+          this.saveUserOrders();
 
-          // 🔥 QUAN TRỌNG: Lưu thông tin đơn hàng để hiển thị trên trang chủ
+          // QUAN TRỌNG: Gửi đơn hàng lên admin
+          const sentToAdmin = this.sendOrderToAdmin(newOrder);
+
+          if (sentToAdmin) {
+            console.log("✅ Đơn hàng đã được gửi lên admin thành công");
+
+            // CẬP NHẬT QUAN TRỌNG: Đồng bộ với userOrders chung
+            this.updateGlobalUserOrders(newOrder);
+          } else {
+            console.error("❌ Lỗi khi gửi đơn hàng lên admin");
+          }
+
+          // Lưu thông tin đơn hàng để hiển thị trên trang chủ
           this.saveOrderData({ ...orderData });
 
-          // 🔥 RESET GIỎ HÀNG VỀ 0 NGAY SAU KHI ĐẶT HÀNG THÀNH CÔNG
+          // Reset giỏ hàng về 0 ngay sau khi đặt hàng thành công
           this.resetCartImmediately();
 
           this.navigateToPage("confirmation-page");
@@ -2902,13 +3151,52 @@
           document.querySelectorAll(".nav-tab").forEach((t) => {
             t.classList.remove("active");
           });
-          const confirmationTab = document.querySelector('[data-target="confirmation-page"]');
-          if (confirmationTab) {
-            confirmationTab.classList.add("active");
+          document
+            .querySelector('[data-target="confirmation-page"]')
+            .classList.add("active");
+        }
+
+        // Các phương thức tính toán
+        calculateSubtotal() {
+          return this.cart.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
+        }
+
+        calculateDiscount() {
+          return this.calculateSubtotal() * 0.2;
+        }
+
+        calculateTotal() {
+          return this.calculateSubtotal() - this.calculateDiscount();
+        }
+
+        // Cập nhật userOrders toàn cục
+        updateGlobalUserOrders(order) {
+          try {
+            let globalUserOrders =
+              JSON.parse(localStorage.getItem("userOrders")) || [];
+
+            // Kiểm tra xem đơn hàng đã tồn tại chưa
+            const existingOrderIndex = globalUserOrders.findIndex(
+              (o) => o.id === order.id
+            );
+
+            if (existingOrderIndex === -1) {
+              globalUserOrders.unshift(order);
+              localStorage.setItem(
+                "userOrders",
+                JSON.stringify(globalUserOrders)
+              );
+              console.log("✅ Đã cập nhật userOrders toàn cục:", order.id);
+            }
+          } catch (error) {
+            console.error("❌ Lỗi khi cập nhật userOrders toàn cục:", error);
           }
         }
 
-        // 🔥 Hàm reset giỏ hàng ngay lập tức
+        // Reset giỏ hàng ngay lập tức
         resetCartImmediately() {
           const emptyCartData = {
             items: [],
@@ -2918,19 +3206,13 @@
             lastUpdated: new Date().toISOString(),
           };
 
-          // Cập nhật localStorage
           localStorage.setItem("cartData", JSON.stringify(emptyCartData));
-
-          // Cập nhật cart instance hiện tại
           this.cart = [];
-
-          // Cập nhật UI
           this.updateCartCount();
-
           console.log("🔄 Đã reset giỏ hàng về 0 sau khi đặt hàng thành công");
         }
 
-        // 🔥 QUAN TRỌNG: Hàm reset giỏ hàng (sẽ được gọi khi quay về trang chủ)
+        // Reset giỏ hàng (sẽ được gọi khi quay về trang chủ)
         resetCart() {
           const emptyCartData = {
             items: [],
@@ -2947,7 +3229,7 @@
           console.log("✅ Đã reset giỏ hàng sau khi xem xác nhận đơn hàng");
         }
 
-        // Hàm lưu thông tin đơn hàng tạm thời
+        // Lưu thông tin đơn hàng tạm thời
         saveOrderData(orderData) {
           const orderInfo = {
             ...orderData,
@@ -2984,7 +3266,6 @@
 
         // Kiểm tra nếu chưa đăng nhập thì hiển thị thông báo
         if (!loginManager.checkLoginStatus()) {
-          // Tự động chuyển hướng về trang chủ sau 3 giây nếu chưa đăng nhập
           setTimeout(() => {
             window.location.href = "../index.html";
           }, 3000);
@@ -2996,11 +3277,15 @@
           if (!currentUser || !currentUser.isLoggedIn) return;
 
           const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-          const userExists = allUsers.some(u => u.phone === currentUser.phone && !u.locked);
+          const userExists = allUsers.some(
+            (u) => u.phone === currentUser.phone && !u.locked
+          );
 
           if (!userExists) {
             // Tài khoản bị xóa hoặc khóa
-            const isLocked = allUsers.some(u => u.phone === currentUser.phone && u.locked);
+            const isLocked = allUsers.some(
+              (u) => u.phone === currentUser.phone && u.locked
+            );
             if (isLocked) {
               alert("❌ Tài khoản của bạn đã bị khóa!");
             } else {
@@ -3018,7 +3303,7 @@
         setInterval(checkAccountStatus, 2000);
 
         // ✅ THÊM: Listener cho sự kiện tài khoản bị khóa
-        window.addEventListener("userAccountLocked", function() {
+        window.addEventListener("userAccountLocked", function () {
           const currentUser = JSON.parse(localStorage.getItem("currentUser"));
           if (currentUser && currentUser.isLoggedIn) {
             alert("❌ Tài khoản của bạn đã bị khóa!");
@@ -3033,7 +3318,7 @@
         });
 
         // ✅ THÊM: Listener cho sự kiện tài khoản bị xóa
-        window.addEventListener("userAccountDeleted", function() {
+        window.addEventListener("userAccountDeleted", function () {
           const currentUser = JSON.parse(localStorage.getItem("currentUser"));
           if (currentUser && currentUser.isLoggedIn) {
             alert("❌ Tài khoản của bạn không tồn tại!");

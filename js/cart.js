@@ -260,6 +260,20 @@ class CartManager {
   increaseQuantity(id) {
     const item = this.cart.find((item) => item.id === id);
     if (item) {
+      // ✅ KIỂM TRA STOCK TỪ LOCALSTORAGE-INVENTORY
+      const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+      // Tìm sản phẩm trong inventory bằng tên hoặc sku
+      const productInventory = inventory.find(i => 
+        i.productId === item.id || i.sku === item.sku || i.name === item.name
+      );
+      const stock = productInventory ? productInventory.stock : null;
+      
+      // Nếu stock = 0 hoặc quantity sắp vượt quá stock
+      if (stock !== null && item.quantity >= stock) {
+        alert("❌ Số lượng sản phẩm không đủ");
+        return; // Dừng việc tăng quantity
+      }
+      
       item.quantity++;
       this.saveCart();
       this.renderCart();

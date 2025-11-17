@@ -1486,6 +1486,17 @@
               return false;
             }
 
+            // ✅ KIỂM TRA STOCK TỪ LOCALSTORAGE-INVENTORY
+            const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+            const productInventory = inventory.find(i => i.productId === productData.id);
+            const stock = productInventory ? productInventory.stock : null;
+            
+            // Nếu tồn kho = 0, hiển thị thông báo và không thêm vào giỏ
+            if (stock === 0) {
+              alert("❌ Sản phẩm hết hàng");
+              return false;
+            }
+
             let cartData = JSON.parse(localStorage.getItem("cartData")) || {
               items: [],
             };
@@ -1659,7 +1670,12 @@
                 return;
               }
 
+              // ✅ TÌM PRODUCT ID TỪ DANH SÁCH PRODUCTS
+              const currentProduct = window.PRODUCTS ? window.PRODUCTS.find(p => p.name === productName) : null;
+              const productId = currentProduct ? currentProduct.id : null;
+
               const productData = {
+                id: productId,
                 name: productName,
                 price: productPrice,
                 image: productImage,
@@ -1692,7 +1708,12 @@
                 return;
               }
 
+              // ✅ TÌM PRODUCT ID TỪ DANH SÁCH PRODUCTS
+              const currentProduct = window.PRODUCTS ? window.PRODUCTS.find(p => p.name === productName) : null;
+              const productId = currentProduct ? currentProduct.id : null;
+
               const productData = {
+                id: productId,
                 name: productName,
                 price: productPrice,
                 image: productImage,

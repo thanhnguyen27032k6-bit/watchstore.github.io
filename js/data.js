@@ -706,4 +706,72 @@ const PRODUCTS   = [
     // Chỉ trả về danh mục không ẩn
     return categories.filter(c => !c.hidden);
   };
+
+  // ✅ TỰ ĐỘNG KHỞI TẠO VÀ ĐỒNG BỘ INVENTORY
+  // Hàm này chạy tự động khi data.js được load
+  window.initializeInventory = function () {
+    // Lấy dữ liệu sản phẩm từ localStorage hoặc PRODUCTS
+    const productsData = JSON.parse(localStorage.getItem("products")) || PRODUCTS || [];
+    
+    // Lấy inventory hiện tại
+    let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+    
+    let hasChanges = false;
+
+    // Duyệt qua tất cả sản phẩm
+    productsData.forEach(product => {
+      const existingIndex = inventory.findIndex(i => i.productId === product.id);
+      
+      if (existingIndex === -1) {
+        // ✅ Sản phẩm mới -> Thêm vào inventory với sku, name, và stock mặc định
+        inventory.push({
+          productId: product.id,
+          sku: product.sku || `SKU-${product.id}`,
+          name: product.name || `Product ${product.id}`,
+          stock: 20  // Số lượng mặc định
+        });
+        hasChanges = true;
+      } else {
+        // ✅ Sản phẩm đã có -> Cập nhật sku và name nếu thay đổi
+        const oldSku = inventory[existingIndex].sku;
+        const oldName = inventory[existingIndex].name;
+        
+        inventory[existingIndex].sku = product.sku || `SKU-${product.id}`;
+        inventory[existingIndex].name = product.name || `Product ${product.id}`;
+        
+        if (oldSku !== inventory[existingIndex].sku || oldName !== inventory[existingIndex].name) {
+          hasChanges = true;
+        }
+      }
+    });
+
+    // Lọc bỏ các mục inventory không còn tương ứng với sản phẩm nào
+    const filteredInventory = inventory.filter(i => 
+      productsData.find(p => p.id === i.productId)
+    );
+    
+    if (filteredInventory.length !== inventory.length) {
+      hasChanges = true;
+    }
+
+    // Lưu vào localStorage nếu có thay đổi
+    if (hasChanges) {
+      localStorage.setItem("inventory", JSON.stringify(filteredInventory));
+      console.log("✅ Inventory đã được khởi tạo/cập nhật tự động:", filteredInventory);
+    }
+    
+    return filteredInventory;
+  };
+
+  // Chạy tự động khi trang load
+  if (typeof document !== 'undefined' && document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      window.initializeInventory();
+    });
+  } else if (typeof document !== 'undefined') {
+    // Nếu DOM đã load xong
+    window.initializeInventory();
+  }
+  
+
   

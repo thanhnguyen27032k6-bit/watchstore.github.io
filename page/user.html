@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
   <head>
@@ -203,6 +202,7 @@
                     >
                       &#x2039; Quay lại đăng nhập
                     </button>
+                    <!-- nút submit để auth.js bắt sự kiện và gọi handleRegister -->
                     <button
                       type="submit"
                       id="btnSubmit"
@@ -217,19 +217,26 @@
           </div>
         </div>
 
-        <div class="profile-area"> 
+        <div class="profile-area">
           <div>
             <h2>Chào mừng bạn đến với Watchsmember!</h2>
             <p>Quản lý tài khoản và thông tin cá nhân của bạn tại đây.</p>
           </div>
           <div class="profile-details">
-            <strong>Tên đầy đủ:</strong> <span id="profile-fullname"></span><br />
+            <strong>Tên đầy đủ:</strong> <span id="profile-fullname"></span
+            ><br />
             <strong>Email:</strong> <span id="profile-email"></span><br />
-            <strong>Số điện thoại:</strong> <span id="profile-phone"></span><br />
-            <strong>Ngày sinh:</strong> <span id="profile-birthdate"></span><br />
+            <strong>Số điện thoại:</strong> <span id="profile-phone"></span
+            ><br />
+            <strong>Ngày sinh:</strong> <span id="profile-birthdate"></span
+            ><br />
           </div>
           <!-- Nút chỉnh sửa thông tin cá nhân -->
-          <div class="profile-edit-form" id="profile-edit-form" style="display: none; margin-top: 20px;">
+          <div
+            class="profile-edit-form"
+            id="profile-edit-form"
+            style="display: none; margin-top: 20px"
+          >
             <h3>Chỉnh sửa thông tin cá nhân</h3>
             <form id="form-edit-profile">
               <div class="form-group">
@@ -242,20 +249,30 @@
               </div>
               <div class="form-group">
                 <label for="edit-phone">Số điện thoại</label>
-                <input type="tel" id="edit-phone" readonly/>
+                <input type="tel" id="edit-phone" readonly />
               </div>
               <div class="form-group">
                 <label for="edit-birthdate">Ngày sinh</label>
                 <input type="date" id="edit-birthdate" max="" />
               </div>
-              <button type="submit" class="btn-save-profile">Lưu thay đổi</button>
-              <button type="button" class="btn-cancel-edit" id="btn-cancel-edit">Hủy</button>
+              <button type="submit" class="btn-save-profile">
+                Lưu thay đổi
+              </button>
+              <button
+                type="button"
+                class="btn-cancel-edit"
+                id="btn-cancel-edit"
+              >
+                Hủy
+              </button>
             </form>
           </div>
           <!--end chỉnh sửa-->
           <div class="profile-bottom">
             <div class="btn-home" id="btn-home">Về trang chủ</div>
-            <button type="button" id="btn-edit-profile">Chỉnh sửa thông tin cá nhân</button>
+            <button type="button" id="btn-edit-profile">
+              Chỉnh sửa thông tin cá nhân
+            </button>
             <div class="logout-button" id="logout-button">Đăng xuất</div>
           </div>
         </div>
@@ -303,35 +320,45 @@
     <script src="../js/main.js"></script>
     <script>
       // Set max cho date
-      const today = new Date().toISOString().split('T')[0];
-      const regBirth = document.getElementById('reg-birthdate');
-      if (regBirth) regBirth.setAttribute('max', today);
+      const today = new Date().toISOString().split("T")[0];
+      const regBirth = document.getElementById("reg-birthdate");
+      if (regBirth) regBirth.setAttribute("max", today);
 
       // Helper lấy / lưu
       function getUsers() {
-        try { return JSON.parse(localStorage.getItem("users")) || []; }
-        catch { return []; }
+        try {
+          return JSON.parse(localStorage.getItem("users")) || [];
+        } catch {
+          return [];
+        }
       }
-      function saveUsers(users) { localStorage.setItem("users", JSON.stringify(users)); }
+      function saveUsers(users) {
+        localStorage.setItem("users", JSON.stringify(users));
+      }
       function getCurrentUser() {
-        try { return JSON.parse(localStorage.getItem("currentUser")); }
-        catch { return null; }
+        try {
+          return JSON.parse(localStorage.getItem("currentUser"));
+        } catch {
+          return null;
+        }
       }
-      function saveCurrentUser(u) { localStorage.setItem("currentUser", JSON.stringify(u)); }
+      function saveCurrentUser(u) {
+        localStorage.setItem("currentUser", JSON.stringify(u));
+      }
 
       // Hiển thị / ẩn khu vực
       function showProfileArea() {
-        const area = document.querySelector('.profile-area');
-        const loginArea = document.querySelector('.login-form-area');
-        if (area) area.style.display = 'block';
-        if (loginArea) loginArea.style.display = 'none';
+        const area = document.querySelector(".profile-area");
+        const loginArea = document.querySelector(".login-form-area");
+        if (area) area.style.display = "block";
+        if (loginArea) loginArea.style.display = "none";
         renderProfile(); // cập nhật nội dung
       }
       function hideProfileArea() {
-        const area = document.querySelector('.profile-area');
-        if (area) area.style.display = 'none';
-        const loginArea = document.querySelector('.login-form-area');
-        if (loginArea) loginArea.style.display = 'block';
+        const area = document.querySelector(".profile-area");
+        if (area) area.style.display = "none";
+        const loginArea = document.querySelector(".login-form-area");
+        if (loginArea) loginArea.style.display = "block";
       }
 
       // Render profile vào các span có id tương ứng
@@ -343,30 +370,42 @@
           return;
         }
 
-        const elName = document.getElementById('profile-fullname');
-        const elEmail = document.getElementById('profile-email');
-        const elPhone = document.getElementById('profile-phone');
-        const elBirth = document.getElementById('profile-birthdate');
+        const elName = document.getElementById("profile-fullname");
+        const elEmail = document.getElementById("profile-email");
+        const elPhone = document.getElementById("profile-phone");
+        const elBirth = document.getElementById("profile-birthdate");
 
-        if (elName) elName.textContent = user.fullname || user.name || "Không có tên";
-        if (elEmail) elEmail.textContent = (user.email && user.email !== "N/A") ? user.email : "Chưa có";
+        if (elName)
+          elName.textContent = user.fullname || user.name || "Không có tên";
+        if (elEmail)
+          elEmail.textContent =
+            user.email && user.email !== "N/A" ? user.email : "Chưa có";
         if (elPhone) elPhone.textContent = user.phone || "N/A";
-        if (elBirth) elBirth.textContent = (user.birthdate && user.birthdate !== "N/A") ? user.birthdate : "Chưa có";
+        if (elBirth)
+          elBirth.textContent =
+            user.birthdate && user.birthdate !== "N/A"
+              ? user.birthdate
+              : "Chưa có";
       }
 
       // Xử lý submit đăng nhập: KHÔNG redirect, chỉ hiện profile-area
-      const loginForm = document.querySelector('.login-form');
+      const loginForm = document.querySelector(".login-form");
       if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener("submit", function (e) {
           e.preventDefault();
-          const phone = (document.getElementById('login-phone').value || '').trim();
-          const password = (document.getElementById('login-password').value || '');
+          const phone = (
+            document.getElementById("login-phone").value || ""
+          ).trim();
+          const password =
+            document.getElementById("login-password").value || "";
 
           const users = getUsers();
-          const user = users.find(u => u.phone === phone);
+          const user = users.find((u) => u.phone === phone);
 
           if (user && user.locked) {
-            alert("❌ Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên!");
+            alert(
+              "❌ Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên!"
+            );
             return;
           }
 
@@ -380,11 +419,11 @@
               phone: user.phone,
               birthdate: user.birthdate || "N/A",
               password: user.password,
-              loginTime: new Date().toISOString()
+              loginTime: new Date().toISOString(),
             };
             saveCurrentUser(userData);
 
-            showLoginSuccess();   // hiển thị noti nhỏ (tuỳ bạn)
+            showLoginSuccess(); // hiển thị noti nhỏ (tuỳ bạn)
             // Hiển thị profile-area thay vì redirect
             setTimeout(() => {
               showProfileArea();
@@ -396,17 +435,23 @@
       }
 
       // Xử lý đăng ký (giữ logic đã chỉnh, sửa lỗi g)
-      const registerForm = document.querySelector('.register-form');
+      const registerForm = document.querySelector(".register-form");
       if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
+        registerForm.addEventListener("submit", function (e) {
           e.preventDefault();
 
-          const fullname = (document.getElementById('reg-fullname').value || '').trim();
-          const email = (document.getElementById('reg-email').value || '').trim();
-          const phone = (document.getElementById('reg-phone').value || '').trim();
-          const birthdate = document.getElementById('reg-birthdate').value;
-          const password = document.getElementById('reg-password').value;
-          const confirmPassword = document.getElementById('reg-pconfirm').value;
+          const fullname = (
+            document.getElementById("reg-fullname").value || ""
+          ).trim();
+          const email = (
+            document.getElementById("reg-email").value || ""
+          ).trim();
+          const phone = (
+            document.getElementById("reg-phone").value || ""
+          ).trim();
+          const birthdate = document.getElementById("reg-birthdate").value;
+          const password = document.getElementById("reg-password").value;
+          const confirmPassword = document.getElementById("reg-pconfirm").value;
 
           if (password !== confirmPassword) {
             alert("❌ Mật khẩu không khớp!");
@@ -418,16 +463,18 @@
           }
 
           const users = getUsers();
-          const exists = users.find(u => u.phone === phone);
+          const exists = users.find((u) => u.phone === phone);
           if (exists) {
-            alert("❌ Số điện thoại này đã được đăng ký. Vui lòng dùng số khác hoặc đăng nhập.");
+            alert(
+              "❌ Số điện thoại này đã được đăng ký. Vui lòng dùng số khác hoặc đăng nhập."
+            );
             return;
           }
 
           // ✅ Generate user ID (U001, U002, etc.)
           let maxNum = 0;
-          users.forEach(u => {
-            if (u.id && u.id.startsWith('U')) {
+          users.forEach((u) => {
+            if (u.id && u.id.startsWith("U")) {
               const num = parseInt(u.id.substring(1));
               if (num > maxNum) maxNum = num;
             }
@@ -443,7 +490,7 @@
             birthdate: birthdate,
             password: password,
             locked: false,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
           };
           users.push(newUser);
           saveUsers(users);
@@ -458,7 +505,7 @@
             phone: newUser.phone,
             birthdate: newUser.birthdate,
             password: newUser.password,
-            loginTime: new Date().toISOString()
+            loginTime: new Date().toISOString(),
           };
           saveCurrentUser(userData);
 
@@ -522,26 +569,26 @@
       }
 
       // Nút logout trong profile-area
-      const logoutBtn = document.getElementById('logout-button');
+      const logoutBtn = document.getElementById("logout-button");
       if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-          localStorage.removeItem('currentUser');
+        logoutBtn.addEventListener("click", function () {
+          localStorage.removeItem("currentUser");
           // reload page về trang login hiện tại
           location.reload();
         });
       }
 
       // Nút về trang chủ
-      const btnHome = document.getElementById('btn-home');
+      const btnHome = document.getElementById("btn-home");
       if (btnHome) {
-        btnHome.addEventListener('click', function() {
+        btnHome.addEventListener("click", function () {
           // chuyển về index (sửa đường dẫn nếu cần)
           window.location.href = "../index.html";
         });
       }
 
       // Khi load trang: nếu đã đăng nhập thì hiện profile ngay
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         const cu = getCurrentUser();
         if (cu && cu.isLoggedIn) {
           showProfileArea();
@@ -555,11 +602,15 @@
           if (!currentUser || !currentUser.isLoggedIn) return;
 
           const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-          const userExists = allUsers.some(u => u.phone === currentUser.phone && !u.locked);
+          const userExists = allUsers.some(
+            (u) => u.phone === currentUser.phone && !u.locked
+          );
 
           if (!userExists) {
             // Tài khoản bị xóa hoặc khóa
-            const isLocked = allUsers.some(u => u.phone === currentUser.phone && u.locked);
+            const isLocked = allUsers.some(
+              (u) => u.phone === currentUser.phone && u.locked
+            );
             if (isLocked) {
               alert("❌ Tài khoản của bạn đã bị khóa!");
             } else {
@@ -574,7 +625,7 @@
         setInterval(checkAccountStatus, 2000);
 
         // ✅ THÊM: Listener cho sự kiện tài khoản bị khóa
-        window.addEventListener("userAccountLocked", function() {
+        window.addEventListener("userAccountLocked", function () {
           const currentUser = JSON.parse(localStorage.getItem("currentUser"));
           if (currentUser && currentUser.isLoggedIn) {
             alert("❌ Tài khoản của bạn đã bị khóa!");
@@ -587,7 +638,7 @@
         });
 
         // ✅ THÊM: Listener cho sự kiện tài khoản bị xóa
-        window.addEventListener("userAccountDeleted", function() {
+        window.addEventListener("userAccountDeleted", function () {
           const currentUser = JSON.parse(localStorage.getItem("currentUser"));
           if (currentUser && currentUser.isLoggedIn) {
             alert("❌ Tài khoản của bạn không tồn tại!");
@@ -608,14 +659,16 @@
         const cu = JSON.parse(localStorage.getItem("currentUser"));
         if (!cu) return;
 
-        document.getElementById("profile-fullname").textContent = cu.fullname || "N/A";
-        document.getElementById("profile-email").textContent = cu.email || "N/A";
-        document.getElementById("profile-phone").textContent = cu.phone || "N/A";
+        document.getElementById("profile-fullname").textContent =
+          cu.fullname || "N/A";
+        document.getElementById("profile-email").textContent =
+          cu.email || "N/A";
+        document.getElementById("profile-phone").textContent =
+          cu.phone || "N/A";
         document.getElementById("profile-birthdate").textContent =
           cu.birthdate || "N/A";
       }
-      function showLoginSuccess() {
-      }
+      function showLoginSuccess() {}
       // Xử lý nút Chỉnh sửa thông tin cá nhân
       const btnEditProfile = document.getElementById("btn-edit-profile");
       const editForm = document.getElementById("profile-edit-form");
@@ -625,15 +678,25 @@
         editForm.style.display = "none"; // mặc định ẩn
 
         btnEditProfile.addEventListener("click", function () {
-          const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+          const currentUser =
+            JSON.parse(localStorage.getItem("currentUser")) || {};
 
           // Điền dữ liệu hiện tại vào form
-          document.getElementById("edit-fullname").value = currentUser.fullname || "";
-          document.getElementById("edit-email").value = currentUser.email && currentUser.email !== "N/A" ? currentUser.email : "";
+          document.getElementById("edit-fullname").value =
+            currentUser.fullname || "";
+          document.getElementById("edit-email").value =
+            currentUser.email && currentUser.email !== "N/A"
+              ? currentUser.email
+              : "";
           document.getElementById("edit-phone").value = currentUser.phone || "";
-          document.getElementById("edit-birthdate").value = currentUser.birthdate && currentUser.birthdate !== "N/A" ? currentUser.birthdate : "";
+          document.getElementById("edit-birthdate").value =
+            currentUser.birthdate && currentUser.birthdate !== "N/A"
+              ? currentUser.birthdate
+              : "";
 
-          document.getElementById("edit-birthdate").setAttribute("max", new Date().toISOString().split('T')[0]);
+          document
+            .getElementById("edit-birthdate")
+            .setAttribute("max", new Date().toISOString().split("T")[0]);
 
           // Ẩn profile details và nút edit
           profileDetails.style.display = "none";
@@ -655,43 +718,54 @@
       }
       // Xử lý submit form chỉnh sửa profile
       const editProfileForm = document.getElementById("form-edit-profile");
-        if (editProfileForm) {
-          editProfileForm.addEventListener("submit", function (e) {
-            e.preventDefault(); // ngăn reload
+      if (editProfileForm) {
+        editProfileForm.addEventListener("submit", function (e) {
+          e.preventDefault(); // ngăn reload
 
-            // Lấy giá trị mới
-            const newFullname = document.getElementById("edit-fullname").value.trim();
-            const newEmail = document.getElementById("edit-email").value.trim() || "N/A";
-            const newPhone = document.getElementById("edit-phone").value.trim();
-            const newBirthdate = document.getElementById("edit-birthdate").value || "N/A";
+          // Lấy giá trị mới
+          const newFullname = document
+            .getElementById("edit-fullname")
+            .value.trim();
+          const newEmail =
+            document.getElementById("edit-email").value.trim() || "N/A";
+          const newPhone = document.getElementById("edit-phone").value.trim();
+          const newBirthdate =
+            document.getElementById("edit-birthdate").value || "N/A";
 
-            // Cập nhật localStorage
-            const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
-            currentUser.fullname = newFullname;
-            currentUser.email = newEmail;
-            currentUser.phone = newPhone;
-            currentUser.birthdate = newBirthdate;
-            localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          // Cập nhật localStorage
+          const currentUser =
+            JSON.parse(localStorage.getItem("currentUser")) || {};
+          currentUser.fullname = newFullname;
+          currentUser.email = newEmail;
+          currentUser.phone = newPhone;
+          currentUser.birthdate = newBirthdate;
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
-            // Cập nhật danh sách users nếu muốn lưu vĩnh viễn
-            const users = JSON.parse(localStorage.getItem("users")) || [];
-            const idx = users.findIndex(u => u.phone === currentUser.phone);
-            if (idx !== -1) {
-              users[idx] = { ...users[idx], fullname: newFullname, email: newEmail, birthdate: newBirthdate };
-              localStorage.setItem("users", JSON.stringify(users));
-            }
+          // Cập nhật danh sách users nếu muốn lưu vĩnh viễn
+          const users = JSON.parse(localStorage.getItem("users")) || [];
+          const idx = users.findIndex((u) => u.phone === currentUser.phone);
+          if (idx !== -1) {
+            users[idx] = {
+              ...users[idx],
+              fullname: newFullname,
+              email: newEmail,
+              birthdate: newBirthdate,
+            };
+            localStorage.setItem("users", JSON.stringify(users));
+          }
 
-            // Hiển thị lại profile và ẩn form
-            document.querySelector(".profile-details").style.display = "block";
-            document.getElementById("profile-edit-form").style.display = "none";
-            document.getElementById("btn-edit-profile").style.display = "inline-block";
+          // Hiển thị lại profile và ẩn form
+          document.querySelector(".profile-details").style.display = "block";
+          document.getElementById("profile-edit-form").style.display = "none";
+          document.getElementById("btn-edit-profile").style.display =
+            "inline-block";
 
-            // Cập nhật giao diện
-            renderProfile();
-            alert("✅ Thông tin cá nhân đã được cập nhật!");
-          });
-        }
-        function showRegisterOverlay() {
+          // Cập nhật giao diện
+          renderProfile();
+          alert("✅ Thông tin cá nhân đã được cập nhật!");
+        });
+      }
+      function showRegisterOverlay() {
         const overlay = document.getElementById("overlay");
         if (overlay) overlay.style.display = "block";
 
@@ -713,6 +787,5 @@
         if (benefitsArea) benefitsArea.style.display = "block";
       }
     </script>
-
   </body>
 </html>
