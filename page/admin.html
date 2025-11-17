@@ -532,10 +532,10 @@
         </div>
     </div>
     <!-- Order Detail Modal -->
-    <div id="orderDetailModal" class="modal" style="display:none; position: fixed; inset:0; background: rgba(0,0,0,0.5); z-index:1200; align-items:center; justify-content:center; overflow-y:auto;">
-        <div style="background:#fff; max-width:900px; width:90%; margin:auto; border-radius:8px; padding:20px; position:relative; top:50%; transform:translateY(-50%); max-height:80vh; overflow-y:auto;">
+    <div id="orderDetailModal" class="modal" style="display:none; position: fixed; inset:0; background: rgba(0,0,0,0.5); z-index:1200; align-items:flex-start; justify-content:center; overflow-y:auto; padding-top:20px;">
+        <div style="background:#fff; max-width:900px; width:90%; margin:0 auto 20px auto; border-radius:8px; padding:20px; position:relative; max-height:calc(100vh - 40px); overflow-y:auto;">
             <button class="close-order-detail" style="position:absolute; right:12px; top:8px; border:none; background:none; font-size:24px; cursor:pointer; z-index:1;">&times;</button>
-            <div id="orderDetailContent" style="overflow-y:auto; max-height:calc(80vh - 40px);"></div>
+            <div id="orderDetailContent" style="overflow-y:auto; max-height:calc(100vh - 80px);"></div>
         </div>
     </div>
 
@@ -1061,9 +1061,8 @@ function saveProduct(name, price, costPrice, profitMargin, discount, brand, cate
     const productData = {
         id: newID,
         name,
-        // Giá bán chính thức (price) = giá sau discount
-        // Nếu editIndex != -1, sử dụng giá cũ trên cart. Nếu editIndex == -1, sử dụng giá mới tính được
-        price: editIndex === -1 ? price : products[editIndex].price, // Giữ lại giá cũ nếu sửa, dùng giá mới nếu thêm
+        //giá bán chính thức (giá sau discount)
+        price:price,
 
         // Thêm giá vốn, phần trăm lợi nhuận và discount
         costPrice: costPrice, // Giá gốc/Chi phí vốn
@@ -1096,27 +1095,33 @@ function saveProduct(name, price, costPrice, profitMargin, discount, brand, cate
     // Cập nhật lại giá bán cho sản phẩm mới thêm (Nếu là thêm mới, nó là giá mới tính)
     // Cập nhật lại giá bán cho sản phẩm cũ (Nếu là chỉnh sửa, nó là giá cũ)
     
-    // Tạm thời, để hiển thị giá bán trong admin panel (chưa là giá thật)
-    if (editIndex != -1) {
-        // Dùng giá bán cũ để không thay đổi giá ngoài cart (theo yêu cầu)
-        products[editIndex].price = products[editIndex].price;
-    } else {
-        // Thêm mới, dùng giá bán mới
-        products[products.length - 1].price = price;
-    }
+   // Lưu products, đồng bộ inventory và render lại giao diện
+        const wasEdit = editIndex !== -1;
 
+        localStorage.setItem("products", JSON.stringify(products));
 
-    localStorage.setItem("products", JSON.stringify(products));
+        // Đồng bộ thông tin sku/name vào inventory nếu cần
+        try {
+            if (typeof syncInventoryWithProducts === 'function') {
+                syncInventoryWithProducts();
+            }
+        } catch (e) { console.warn(e); }
 
-    productRender();
-    productForm.reset();
-    productForm.style.display = "none";
-    previewImage.style.display = "none";
-    productImage.value = "";
-    productSellingPriceInput.value = ''; // Reset giá bán tự động
-    editIndex = -1;
-    
-    alert(editIndex === -1 ? "✅ Đã thêm sản phẩm thành công!" : "✅ Đã cập nhật chi tiết nội bộ (Giá gốc & Lợi nhuận) thành công! Giá bán KHÔNG thay đổi.");
+        // Cập nhật giao diện admin và trang người dùng
+        try { if (typeof productRender === 'function') productRender(); } catch(e) { console.warn(e); }
+        try { if (window.renderXuHuongProducts) window.renderXuHuongProducts(); } catch(e) { console.warn(e); }
+        try { if (window.renderNamProducts) window.renderNamProducts(); } catch(e) { console.warn(e); }
+        try { if (window.renderNuProducts) window.renderNuProducts(); } catch(e) { console.warn(e); }
+        try { if (window.renderHotSaleProducts) window.renderHotSaleProducts(); } catch(e) { console.warn(e); }
+
+        productForm.reset();
+        productForm.style.display = "none";
+        previewImage.style.display = "none";
+        productImage.value = "";
+        productSellingPriceInput.value = ''; // Reset giá bán tự động
+        editIndex = -1;
+
+        alert(wasEdit ? "✅ Đã cập nhật sản phẩm thành công! (giá đã được cập nhật)" : "✅ Đã thêm sản phẩm thành công!");
 }
 
 // ==================== TÌM KIẾM VÀ SẮP XẾP SẢN PHẨM ====================
