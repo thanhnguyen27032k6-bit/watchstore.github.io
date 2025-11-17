@@ -1876,6 +1876,25 @@ button {
   transform: translateY(-2px);
 }
 
+/* Style cho nút MUA NGAY trên product card */
+.buy-now-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  background: #28a745; /* màu xanh bán hàng */
+  color: #fff;
+}
+.buy-now-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
 /* Product image */
 .product-image {
   width: 100%;

@@ -7,6 +7,75 @@
     <title>Admin Dashboard | WatchStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/admin.css">
+    <style>
+        /* CSS cho thông báo tùy chỉnh */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out, slideOut 0.3s ease-out 4.7s;
+            max-width: 400px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification.success {
+            background-color: #10b981;
+            color: white;
+            border-left: 4px solid #059669;
+        }
+
+        .notification.error {
+            background-color: #ef4444;
+            color: white;
+            border-left: 4px solid #dc2626;
+        }
+
+        .notification.warning {
+            background-color: #f59e0b;
+            color: white;
+            border-left: 4px solid #d97706;
+        }
+
+        .notification.info {
+            background-color: #3b82f6;
+            color: white;
+            border-left: 4px solid #1e40af;
+        }
+
+        .notification i {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(450px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(450px);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -597,6 +666,35 @@
 
     <script>
         // =======================================================
+        // HÀM THÔNG BÁO TOÀN CỤC (Thay thế alert)
+        // =======================================================
+        function showNotification(message, type = 'info', duration = 5000) {
+            // Loại: 'success', 'error', 'warning', 'info'
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-times-circle',
+                warning: 'fa-exclamation-circle',
+                info: 'fa-info-circle'
+            };
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${icons[type]}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Tự động xóa sau duration
+            setTimeout(() => {
+                notification.remove();
+            }, duration);
+        }
+
+        // Manual data loader removed: auto-load will run on Edit click
+
+        // =======================================================
         // PHẦN JAVASCRIPT (auth.js đã gộp vào)
         // =======================================================
         // --- Hàm loại bỏ dấu và tạo slug đồng nhất ---
@@ -708,6 +806,10 @@
                         if (targetId === 'dashboard') {
                             updateDashboardMetrics();
                             renderRecentOrders();
+                        }
+                        // ✅ Tab Quản lý Sản phẩm
+                        if (targetId === 'products') {
+                            // Manual loader removed; auto-load runs when editing products
                         }
                     }
                 }
@@ -914,27 +1016,50 @@ function attachEditDeleteEvents() {
             // Hiển thị form
             productForm.style.display = "block";
 
-            // Điền thông tin cũ
-            document.getElementById("productName").value = product.name;
-            // CẬP NHẬT ĐIỀN GIÁ GỐC VÀ LỢI NHUẬN
-            const costPrice = product.costPrice || 0; 
-            const profitMargin = product.profitMargin || 0;
-            const discount = product.discount || 0;
+            // Điền thông tin (tự động tải từ data.js nếu có)
+            const dataProduct = (window.PRODUCTS || []).find(p => p.id == product.id);
 
-            productCostPriceInput.value = costPrice;
-            productProfitMarginInput.value = profitMargin;
-            document.getElementById("productDiscount").value = discount;
+            if (dataProduct) {
+                // Nếu tìm thấy dữ liệu trong data.js, dùng dữ liệu từ catalog
+                document.getElementById("productName").value = dataProduct.name || product.name;
+
+                const displayPrice = dataProduct.price || product.price || 0;
+                const estimatedMargin = 20; // mặc định 20% nếu không có thông tin
+                const estimatedCostPrice = Math.round(displayPrice / (1 + estimatedMargin / 100));
+
+                productCostPriceInput.value = estimatedCostPrice;
+                productProfitMarginInput.value = estimatedMargin;
+                document.getElementById("productDiscount").value = product.discount || 0;
+
+                document.getElementById("productBrand").value = dataProduct.brand || product.brand || "";
+                document.getElementById("productCate").value = dataProduct.category || product.category || "";
+
+                document.getElementById("productDescription").value = dataProduct.description || product.description || "";
+                document.getElementById("productSize").value = dataProduct.specs?.size || product.specs?.size || "";
+                document.getElementById("productMovement").value = dataProduct.specs?.movement || product.specs?.movement || "";
+                document.getElementById("productWaterResistance").value = dataProduct.specs?.waterResistance || product.specs?.waterResistance || "";
+
+                showNotification(`Đã tải dữ liệu từ Data cho sản phẩm "${dataProduct.name || product.name}"`, 'info');
+            } else {
+                // Nếu không có trong data.js, dùng dữ liệu đã lưu
+                document.getElementById("productName").value = product.name;
+                const costPrice = product.costPrice || 0; 
+                const profitMargin = product.profitMargin || 0;
+                const discount = product.discount || 0;
+
+                productCostPriceInput.value = costPrice;
+                productProfitMarginInput.value = profitMargin;
+                document.getElementById("productDiscount").value = discount;
+
+                document.getElementById("productBrand").value = product.brand;
+                document.getElementById("productCate").value = product.category;
+                document.getElementById("productDescription").value = product.description || "";
+                document.getElementById("productSize").value = product.specs?.size || "";
+                document.getElementById("productMovement").value = product.specs?.movement || "";
+                document.getElementById("productWaterResistance").value = product.specs?.waterResistance || "";
+            }
 
             calculateSellingPrice(); // Tính lại giá bán hiển thị
-
-            document.getElementById("productBrand").value = product.brand;
-            document.getElementById("productCate").value = product.category;
-            
-            // Điền mô tả và thông số kỹ thuật
-            document.getElementById("productDescription").value = product.description || "";
-            document.getElementById("productSize").value = product.specs?.size || "";
-            document.getElementById("productMovement").value = product.specs?.movement || "";
-            document.getElementById("productWaterResistance").value = product.specs?.waterResistance || "";
 
             // Xử lý preview ảnh
             if (product.image && product.image.startsWith("data:image")) {
@@ -1004,12 +1129,12 @@ productForm.addEventListener("submit", (e) => {
     const finalPrice = Math.round(sellingPrice * (1 - discount / 100));
 
     if (costPrice <= 0 || profitMargin < 0) {
-        alert("Vui lòng nhập Giá Gốc và Phần trăm Lợi nhuận hợp lệ (Giá gốc > 0, Lợi nhuận >= 0).");
+        showNotification("Vui lòng nhập Giá Gốc và Phần trăm Lợi nhuận hợp lệ (Giá gốc > 0, Lợi nhuận >= 0).", 'error');
         return;
     }
     
     if (discount > profitMargin) {
-        alert(`Phần trăm Discount (${discount}%) không được vượt quá Phần trăm Lợi nhuận (${profitMargin}%)`);
+        showNotification(`Phần trăm Discount (${discount}%) không được vượt quá Phần trăm Lợi nhuận (${profitMargin}%)`, 'warning');
         return;
     }
 
@@ -1086,42 +1211,39 @@ function saveProduct(name, price, costPrice, profitMargin, discount, brand, cate
         productData.price = price; 
         products.push(productData);
     } else {
-        // Nếu là sửa: Dùng giá bán cũ, CẬP NHẬT các trường khác (costPrice, profitMargin, discount, brand, image, description, specs,...)
-        const existingPrice = products[editIndex].price;
-        productData.price = existingPrice;
+        // Nếu là sửa: CẬP NHẬT giá bán mới và các trường khác
+        productData.price = price; // ✅ CẬP NHẬT GIÚP GIÁ HIỂN THỊ SẢN PHẨM THAY ĐỔI
         products[editIndex] = productData;
     }
     
-    // Cập nhật lại giá bán cho sản phẩm mới thêm (Nếu là thêm mới, nó là giá mới tính)
-    // Cập nhật lại giá bán cho sản phẩm cũ (Nếu là chỉnh sửa, nó là giá cũ)
-    
-   // Lưu products, đồng bộ inventory và render lại giao diện
-        const wasEdit = editIndex !== -1;
+    // Lưu products, đồng bộ inventory và render lại giao diện
+    const wasEdit = editIndex !== -1;
 
-        localStorage.setItem("products", JSON.stringify(products));
+    localStorage.setItem("products", JSON.stringify(products));
 
-        // Đồng bộ thông tin sku/name vào inventory nếu cần
-        try {
-            if (typeof syncInventoryWithProducts === 'function') {
-                syncInventoryWithProducts();
-            }
-        } catch (e) { console.warn(e); }
+    // Đồng bộ thông tin sku/name vào inventory nếu cần
+    try {
+        if (typeof syncInventoryWithProducts === 'function') {
+            syncInventoryWithProducts();
+        }
+    } catch (e) { console.warn(e); }
 
-        // Cập nhật giao diện admin và trang người dùng
-        try { if (typeof productRender === 'function') productRender(); } catch(e) { console.warn(e); }
-        try { if (window.renderXuHuongProducts) window.renderXuHuongProducts(); } catch(e) { console.warn(e); }
-        try { if (window.renderNamProducts) window.renderNamProducts(); } catch(e) { console.warn(e); }
-        try { if (window.renderNuProducts) window.renderNuProducts(); } catch(e) { console.warn(e); }
-        try { if (window.renderHotSaleProducts) window.renderHotSaleProducts(); } catch(e) { console.warn(e); }
+    // Cập nhật giao diện admin và trang người dùng
+    try { if (typeof productRender === 'function') productRender(); } catch(e) { console.warn(e); }
+    try { if (window.renderXuHuongProducts) window.renderXuHuongProducts(); } catch(e) { console.warn(e); }
+    try { if (window.renderNamProducts) window.renderNamProducts(); } catch(e) { console.warn(e); }
+    try { if (window.renderNuProducts) window.renderNuProducts(); } catch(e) { console.warn(e); }
+    try { if (window.renderHotSaleProducts) window.renderHotSaleProducts(); } catch(e) { console.warn(e); }
 
-        productForm.reset();
-        productForm.style.display = "none";
-        previewImage.style.display = "none";
-        productImage.value = "";
-        productSellingPriceInput.value = ''; // Reset giá bán tự động
-        editIndex = -1;
+    productForm.reset();
+    productForm.style.display = "none";
+    previewImage.style.display = "none";
+    productImage.value = "";
+    productSellingPriceInput.value = ''; // Reset giá bán tự động
+    document.getElementById("productSellingDisountPrice").value = '';
+    editIndex = -1;
 
-        alert(wasEdit ? "✅ Đã cập nhật sản phẩm thành công! (giá đã được cập nhật)" : "✅ Đã thêm sản phẩm thành công!");
+    showNotification(wasEdit ? "Đã cập nhật sản phẩm thành công! Giá hiển thị đã được cập nhật." : "Đã thêm sản phẩm thành công!", 'success');
 }
 
 // ==================== TÌM KIẾM VÀ SẮP XẾP SẢN PHẨM ====================
@@ -1870,15 +1992,16 @@ productRender();
 
             // Gắn sự kiện cho nút Reset mật khẩu
             document.querySelectorAll(".reset-pass-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", async function () {
                     const idx = Number(this.dataset.index);
                     const users = loadUsers();
                     if (!users[idx]) return;
 
-                    if (confirm(`Reset mật khẩu cho "${users[idx].name}" về "123456"?`)) {
+                    const ok = await showConfirm(`Reset mật khẩu cho "${users[idx].name}" về "123456"?`, 'Reset mật khẩu');
+                    if (ok) {
                         users[idx].password = "123456";
                         saveUsers(users);
-                        alert("✓ Đã reset mật khẩu thành công!\nMật khẩu mới: 123456");
+                        showNotification("✓ Đã reset mật khẩu thành công! Mật khẩu mới: 123456", 'success');
                         renderUsers();
                     }
                 });
@@ -1886,7 +2009,7 @@ productRender();
 
             // Gắn sự kiện cho nút Khoá/Mở khoá
             document.querySelectorAll(".toggle-lock-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", async function () {
                     const idx = Number(this.dataset.index);
                     const users = loadUsers();
                     if (!users[idx]) return;
@@ -1895,7 +2018,7 @@ productRender();
                         ? `Mở khoá tài khoản "${users[idx].name}"?`
                         : `Khoá tài khoản "${users[idx].name}"?`;
 
-                    if (confirm(confirmMsg)) {
+                    if (await showConfirm(confirmMsg, 'Xác nhận')) {
                         const lockedUser = users[idx];
                         const oldLocked = users[idx].locked;
                         users[idx].locked = !users[idx].locked;
@@ -1917,7 +2040,7 @@ productRender();
                         }
                         
                         const statusMsg = users[idx].locked ? "khoá" : "mở khoá";
-                        alert(`✓ Đã ${statusMsg} tài khoản "${users[idx].name}" thành công!`);
+                        showNotification(`✓ Đã ${statusMsg} tài khoản "${users[idx].name}" thành công!`, 'success');
                         renderUsers();
                     }
                 });
@@ -1925,12 +2048,12 @@ productRender();
 
             // Gắn sự kiện cho nút Xóa tài khoản
             document.querySelectorAll(".delete-user-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", async function () {
                     const idx = Number(this.dataset.index);
                     let users = loadUsers();
                     if (!users[idx]) return;
 
-                    if (!confirm(`Xóa tài khoản "${users[idx].name}"? Hành động này không thể hoàn tác.`)) {
+                    if (!await showConfirm(`Xóa tài khoản "${users[idx].name}"? Hành động này không thể hoàn tác.`, 'Xóa tài khoản')) {
                         return;
                     }
 
@@ -1953,7 +2076,7 @@ productRender();
                         window.dispatchEvent(new Event("userAccountDeleted"));
                     }
                     
-                    alert(`✓ Đã xóa tài khoản "${deletedUserName}" thành công.`);
+                    showNotification(`✓ Đã xóa tài khoản "${deletedUserName}" thành công.`, 'success');
                     renderUsers();
                 });
             });
@@ -2025,15 +2148,16 @@ productRender();
 
             // Gắn sự kiện cho nút Reset mật khẩu
             document.querySelectorAll(".reset-pass-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", async function () {
                     const idx = Number(this.dataset.index);
                     const users = loadUsers();
                     if (!users[idx]) return;
 
-                    if (confirm(`Reset mật khẩu cho "${users[idx].name}" về "123456"?`)) {
+                    const ok = await showConfirm(`Reset mật khẩu cho "${users[idx].name}" về "123456"?`, 'Reset mật khẩu');
+                    if (ok) {
                         users[idx].password = "123456";
                         saveUsers(users);
-                        alert("✓ Đã reset mật khẩu thành công!\nMật khẩu mới: 123456");
+                        showNotification("✓ Đã reset mật khẩu thành công! Mật khẩu mới: 123456", 'success');
                         renderFilteredUsers();
                     }
                 });
@@ -2041,7 +2165,7 @@ productRender();
 
             // Gắn sự kiện cho nút Khoá/Mở khoá
             document.querySelectorAll(".toggle-lock-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", async function () {
                     const idx = Number(this.dataset.index);
                     const users = loadUsers();
                     if (!users[idx]) return;
@@ -2050,7 +2174,7 @@ productRender();
                         ? `Mở khoá tài khoản "${users[idx].name}"?`
                         : `Khoá tài khoản "${users[idx].name}"?`;
 
-                    if (confirm(confirmMsg)) {
+                    if (await showConfirm(confirmMsg, 'Xác nhận')) {
                         const lockedUser = users[idx];
                         const oldLocked = users[idx].locked;
                         users[idx].locked = !users[idx].locked;
@@ -2072,7 +2196,7 @@ productRender();
                         }
                         
                         const statusMsg = users[idx].locked ? "khoá" : "mở khoá";
-                        alert(`✓ Đã ${statusMsg} tài khoản "${users[idx].name}" thành công!`);
+                        showNotification(`✓ Đã ${statusMsg} tài khoản "${users[idx].name}" thành công!`, 'success');
                         renderFilteredUsers();
                     }
                 });
@@ -2080,12 +2204,12 @@ productRender();
 
             // Gắn sự kiện cho nút Xóa tài khoản
             document.querySelectorAll(".delete-user-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
+                btn.addEventListener("click", async function () {
                     const idx = Number(this.dataset.index);
                     let users = loadUsers();
                     if (!users[idx]) return;
 
-                    if (!confirm(`Xóa tài khoản "${users[idx].name}"? Hành động này không thể hoàn tác.`)) {
+                    if (!await showConfirm(`Xóa tài khoản "${users[idx].name}"? Hành động này không thể hoàn tác.`, 'Xóa tài khoản')) {
                         return;
                     }
 
@@ -2108,7 +2232,7 @@ productRender();
                         window.dispatchEvent(new Event("userAccountDeleted"));
                     }
                     
-                    alert(`✓ Đã xóa tài khoản "${deletedUserName}" thành công.`);
+                    showNotification(`✓ Đã xóa tài khoản "${deletedUserName}" thành công.`, 'success');
                     renderFilteredUsers();
                 });
             });
@@ -2236,12 +2360,12 @@ productRender();
                         const quantity = Number(qtyInput.value);
 
                         if (!cost || cost <= 0) {
-                            alert("Vui lòng nhập Chi phí vốn hợp lệ (> 0).");
+                            showNotification("Vui lòng nhập Chi phí vốn hợp lệ (> 0).", 'error');
                             return;
                         }
 
                         if (!quantity || quantity <= 0) {
-                            alert("Vui lòng nhập Số lượng nhập hợp lệ (> 0).");
+                            showNotification("Vui lòng nhập Số lượng nhập hợp lệ (> 0).", 'error');
                             return;
                         }
 
@@ -2362,7 +2486,7 @@ productRender();
             e.preventDefault();
 
             if (selectedProductsForReceipt.length === 0) {
-                alert("Phiếu nhập phải có ít nhất một sản phẩm.");
+                showNotification("Phiếu nhập phải có ít nhất một sản phẩm.", 'error');
                 return;
             }
 
@@ -3074,6 +3198,70 @@ productRender();
         }
     </script>
 
-</body>
+    <!-- Confirmation modal (reusable) -->
+    <div id="confirmModal" class="confirm-modal" aria-hidden="true">
+        <div class="confirm-modal-backdrop"></div>
+        <div class="confirm-modal-content" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+            <h3 id="confirmModalTitle">Xác nhận</h3>
+            <div id="confirmModalMessage" class="confirm-modal-message">Bạn có chắc chắn?</div>
+            <div class="confirm-modal-actions">
+                <button id="confirmCancelBtn" class="btn btn-secondary">Huỷ</button>
+                <button id="confirmOkBtn" class="btn btn-primary">Xác nhận</button>
+            </div>
+        </div>
+    </div>
 
-</html>
+    <style>
+    /* Minimal styles for confirmation modal */
+    .confirm-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 9999; }
+    .confirm-modal.active { display: flex; }
+    .confirm-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+    .confirm-modal-content { position: relative; background: #fff; padding: 18px; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); width: 420px; max-width: calc(100% - 40px); z-index: 2; }
+    .confirm-modal-content h3 { margin: 0 0 8px 0; font-size: 1.05rem; }
+    .confirm-modal-message { margin-bottom: 14px; color: #333; }
+    .confirm-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn { padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; }
+    .btn-primary { background: #1e40af; color: white; }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    </style>
+
+    <script>
+    // showConfirm: returns a Promise<boolean>
+    function showConfirm(message, title) {
+        return new Promise(resolve => {
+            const modal = document.getElementById('confirmModal');
+            const msgEl = document.getElementById('confirmModalMessage');
+            const titleEl = document.getElementById('confirmModalTitle');
+            const okBtn = document.getElementById('confirmOkBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            titleEl.textContent = title || 'Xác nhận';
+            msgEl.textContent = message || '';
+
+            function cleanup(result) {
+                modal.classList.remove('active');
+                okBtn.removeEventListener('click', onOk);
+                cancelBtn.removeEventListener('click', onCancel);
+                modal.removeEventListener('click', onBackdrop);
+                resolve(result);
+            }
+
+            function onOk(e) { e.preventDefault(); cleanup(true); }
+            function onCancel(e) { e.preventDefault(); cleanup(false); }
+            function onBackdrop(e) { if (e.target === modal || e.target.classList.contains('confirm-modal-backdrop')) cleanup(false); }
+
+            okBtn.addEventListener('click', onOk);
+            cancelBtn.addEventListener('click', onCancel);
+            modal.addEventListener('click', onBackdrop);
+
+            // Show
+            modal.classList.add('active');
+            // Focus OK for quick action
+            okBtn.focus();
+        });
+    }
+    </script>
+
+    </body>
+
+    </html>
