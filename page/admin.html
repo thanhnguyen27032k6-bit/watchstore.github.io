@@ -1416,7 +1416,7 @@ productRender();
             if (!name) return;
 
             if (editCategoryIndex === -1 && categories.some(c => c.name.toLowerCase() === name)) {
-                showNotification("Danh mục đã tồn tại", 'warning');
+                alert("Danh mục đã tồn tại");
                 return
             }
 
@@ -2478,7 +2478,7 @@ productRender();
                 </div>
             `;
 
-            showNotification("Đã hiển thị chi tiết phiếu nhập", 'info');
+            alert("Chi tiết Phiếu Nhập:\n\n" + detailsHTML.replace(/<[^>]*>/g, '\n').replace(/\n\n+/g, '\n'));
         }
 
         // --- Logic Lưu Phiếu Nhập Hàng ---
@@ -2519,9 +2519,13 @@ productRender();
 
             // Hiển thị tóm tắt các mục đã cập nhật cho người dùng
             if (Array.isArray(inventoryUpdates) && inventoryUpdates.length > 0) {
-                showNotification(`Đã tạo Phiếu Nhập ${newReceipt.id} và cập nhật kho`, 'success');
+                let msg = `Đã tạo Phiếu Nhập ${newReceipt.id}.\nCác mục kho đã cập nhật:\n`;
+                inventoryUpdates.forEach(u => {
+                    msg += `- ${u.productId}: ${u.oldStock} → ${u.newStock}\n`;
+                });
+                alert(msg);
             } else {
-                showNotification(`Đã tạo và lưu Phiếu Nhập hàng ${newReceipt.id} thành công!`, 'success');
+                alert(`✓ Đã tạo và lưu Phiếu Nhập hàng ${newReceipt.id} thành công!\n(Không có thay đổi kho)`);
             }
 
             importReceiptModal.style.display = "none";
@@ -3065,9 +3069,9 @@ productRender();
                         // Nếu vừa chuyển status từ pending -> confirmed thì không còn hủy được
                         orderManager.saveOrders();
                         renderOrders();
-                        showNotification(res.message, 'success');
+                        alert('✅ ' + res.message);
                     } else {
-                        showNotification(res.message, 'error');
+                        alert('❌ ' + res.message);
                     }
                 });
             });
@@ -3082,10 +3086,10 @@ productRender();
                         const res = orderManager.updateOrderStatus(orderId, 'cancelled');
                         if (res.success) {
                             // Khi hủy: giữ nguyên số lượng (không cập nhật kho)
-                            showNotification('Đã hủy đơn hàng', 'success');
+                            alert('✅ Đã hủy đơn hàng');
                             renderOrders();
                         } else {
-                            showNotification(res.message, 'error');
+                            alert('❌ ' + res.message);
                         }
                     }
                 });
@@ -3135,7 +3139,7 @@ productRender();
             const handleConfirm = () => {
                 const newStatus = document.getElementById('new-status-select').value;
                 if (!newStatus) {
-                    showNotification('Vui lòng chọn trạng thái', 'warning');
+                    alert('Vui lòng chọn trạng thái');
                     return;
                 }
 
@@ -3153,7 +3157,7 @@ productRender();
                         orderManager.saveOrders();
                     }
 
-                    showNotification('Cập nhật trạng thái thành công', 'success');
+                    alert('✅ Cập nhật trạng thái thành công');
                     modal.classList.remove('active');
                     renderOrders();
                     document.getElementById('new-status-select').value = '';
@@ -3162,7 +3166,7 @@ productRender();
                     btnConfirm.removeEventListener('click', handleConfirm);
                     btnCancel.removeEventListener('click', handleCancel);
                 } else {
-                    showNotification('Lỗi: ' + result.message, 'error');
+                    alert('❌ Lỗi: ' + result.message);
                 }
             };
 
